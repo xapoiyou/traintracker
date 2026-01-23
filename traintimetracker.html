@@ -327,7 +327,7 @@
                 <div class="filter-group">
                     <label for="journeyInput">Journey ID</label>
                     <input type="text" id="journeyInput" list="journeyOptions" placeholder="e.g., 01, 02, 03...11">
-                    <datalist id="journeyOptions">\
+                    <datalist id="journeyOptions">
                         <option value=" ">Select Journey</option>
                         <option value="J1">01</option>
                         <option value="J2">02</option>
@@ -4341,7 +4341,7 @@
                             Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${Math.round((route.indexOf(currentStop) / route.length) * 10) * 10}%"></div>
+                            <div class="progress-fill" style="width: ${Math.round((result.allStops.indexOf(result.currentStop) / result.allStops.length) * 100)}%"></div>
                         </div>
                     </div>
                     ` : '<div style="color: #f44336; margin-top: 15px;">⏁ Journey Completed</div>'}
@@ -4449,6 +4449,7 @@
 </body>
 
 </html>
+
 
 
 
