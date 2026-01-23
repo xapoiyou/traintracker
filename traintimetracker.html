@@ -353,54 +353,56 @@
                 
                 <div class="filter-group">
                     <label for="stationInput">Station Code</label>
-                    <select id="stationInput">
-                        <option value="APMC">APMC</option>
-                        <option value="JVRJ">Jivraj Park</option>
-                        <option value="RNMS">Rajivnagar</option>
-                        <option value="SRYS">Sreyas</option>
-                        <option value="PLDI">Paldi</option>
-                        <option value="GRMS">Gandhigram</option>
-                        <option value="OHCI">Old High Court</option>
-                        <option value="UPMS">Ushmanpura</option>
-                        <option value="VRMS">Vijaynagar</option>
-                        <option value="VDMS">Vadaj</option>
-                        <option value="RNIP">Ranip</option>
-                        <option value="AEC">AEC</option>
-                        <option value="SMMS">Sabarmati</option>
-                        <option value="MTRS">Motera Stadium</option>
-                        <option value="KORD">Koteshwar Road</option>
-                        <option value="VIKC">Vishwakarma College</option>
-                        <option value="TAPC">Tapovan Circle</option>
-                        <option value="NAMC">Narmada Canal</option>
-                        <option value="KOBC">Koba Circle</option>
-                        <option value="JUKB">Juna Koba</option>
-                        <option value="KOBG">Koba Gam</option>
-                        <option value="GNLU">GNLU</option>
-                        <option value="PDEU">PDEU</option>
-                        <option value="GIFC">Gift City</option>
-                        <option value="RAYN">Raysan</option>
-                        <option value="RADN">Randesan</option>
-                        <option value="DHKU">Dholakuva Circle</option>
-                        <option value="INFC">Infocity</option>
-                        <option value="SEOA">Sector-1</option>
-                        <option value="SEAO">Sector-10A</option>
-                        <option value="SAVL">Sachivalaya</option>
-                        <option value="AKDM">Akshardham</option>
-                        <option value="JUSL">Juna Sachivalaya</option>
-                        <option value="SEAF">Sector-16</option>
-                        <option value="SEBD">Sector-24</option>
-                        <option value="MAHM">Mahatma Mandir</option>
-                    </select>
+                    <input type="text" id="stationInput" list="stationOptions" placeholder="Select or type station" value="OHCI">
+                    <datalist id="stationOptions">
+                      <option value="APMC">APMC</option>
+                      <option value="JVRJ">Jivraj Park</option>
+                      <option value="RNMS">Rajivnagar</option>
+                      <option value="SRYS">Sreyas</option>
+                      <option value="PLDI">Paldi</option>
+                      <option value="GRMS">Gandhigram</option>
+                      <option value="OHCI">Old High Court</option>
+                      <option value="UPMS">Ushmanpura</option>
+                      <option value="VRMS">Vijaynagar</option>
+                      <option value="VDMS">Vadaj</option>
+                      <option value="RNIP">Ranip</option>
+                      <option value="AEC">AEC</option>
+                      <option value="SMMS">Sabarmati</option>
+                      <option value="MTRS">Motera Stadium</option>
+                      <option value="KORD">Koteshwar Road</option>
+                      <option value="VIKC">Vishwakarma College</option>
+                      <option value="TAPC">Tapovan Circle</option>
+                      <option value="NAMC">Narmada Canal</option>
+                      <option value="KOBC">Koba Circle</option>
+                      <option value="JUKB">Juna Koba</option>
+                      <option value="KOBG">Koba Gam</option>
+                      <option value="GNLU">GNLU</option>
+                      <option value="PDEU">PDEU</option>
+                      <option value="GIFC">Gift City</option>
+                      <option value="RAYN">Raysan</option>
+                      <option value="RADN">Randesan</option>
+                      <option value="DHKU">Dholakuva Circle</option>
+                      <option value="INFC">Infocity</option>
+                      <option value="SEOA">Sector-1</option>
+                      <option value="SEAO">Sector-10A</option>
+                      <option value="SAVL">Sachivalaya</option>
+                      <option value="AKDM">Akshardham</option>
+                      <option value="JUSL">Juna Sachivalaya</option>
+                      <option value="SEAF">Sector-16</option>
+                      <option value="SEBD">Sector-24</option>
+                      <option value="MAHM">Mahatma Mandir</option>
+                        </datalist>
                 </div>
 
                 <div class="filter-group">
                     <label for="platformFilter">Platform</label>
-                    <select id="platformFilter">
-                        <option value="">All Platforms</option>
-                        <option value="PL1">PL1</option>
-                        <option value="PL2">PL2</option>
-                        <option value="PL3">PL3</option>
-                    </select>
+                    <input type="text" id="platformFilter" list="platformOptions" placeholder="All Platforms">
+                    <datalist id="platformOptions">
+                      <option value="">All Platforms</option>
+                      <option value="PL1">PL1</option>
+                      <option value="PL2">PL2</option>
+                      <option value="PL3">PL3</option>
+                    </datalist>
                 </div>
 
                 <button onclick="searchByStation()">Find Journeys</button>
@@ -4446,6 +4448,7 @@
 </body>
 
 </html>
+
 
 
 
