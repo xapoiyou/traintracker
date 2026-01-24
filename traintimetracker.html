@@ -4348,28 +4348,32 @@
                 `;
             }
 
-            // Display all stops with highlighting
-            let html = '';
-            result.allStops.forEach((stop, idx) => {
-                const stopTime = timeToMinutes(stop.departure);
-                const currentTime = getCurrentTimeInMinutes();
-                const isActive = stop === result.currentStop;
-                const isPast = stopTime < currentTime && !isActive;
+    // Display only current and upcoming stops
+    let html = '';
+    const currentTime = getCurrentTimeInMinutes();
+    
+    result.allStops.forEach((stop, idx) => {
+        const stopTime = timeToMinutes(stop.departure);
+        const isActive = stop === result.currentStop;
+        const isUpcoming = stopTime >= currentTime;
 
-                html += `
-                    <tr ${isActive ? 'class="active-row"' : ''}>
-                        <td><span class="journey-id">${stop.journey}</span></td>
-                        <td>${isActive ? '🟢 Current' : isPast ? '✓ Departed' : '○ Upcoming'}</td>
-                        <td><span class="station-badge">${stop.station}</span></td>
-                        <td><span class="platform-badge">${stop.platform}</span></td>
-                        <td><span class="time">${stop.departure}</span></td>
-                        <td>${idx < result.allStops.length - 1 ? stationMap[result.allStops[idx + 1].station] : 'Final Stop'}</td>
-                    </tr>
-                `;
-            });
-
-            document.getElementById('tableBody').innerHTML = html;
+        // Show only current and upcoming stops
+        if (isActive || isUpcoming) {
+            html += `
+                <tr ${isActive ? 'class="active-row"' : ''}>
+                    <td><span class="journey-id">${stop.journey}</span></td>
+                    <td>${isActive ? '🟢 Current' : '○ Upcoming'}</td>
+                    <td><span class="station-badge">${stop.station}</span></td>
+                    <td><span class="platform-badge">${stop.platform}</span></td>
+                    <td><span class="time">${stop.departure}</span></td>
+                    <td>${idx < result.allStops.length - 1 ? stationMap[result.allStops[idx + 1].station] : 'Final Stop'}</td>
+                </tr>
+            `;
         }
+    });
+
+    document.getElementById('tableBody').innerHTML = html;
+}
 
         // Search by station
         function searchByStation() {
@@ -4449,6 +4453,7 @@
 </body>
 
 </html>
+
 
 
 
