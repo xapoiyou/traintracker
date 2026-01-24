@@ -4387,39 +4387,52 @@ function searchByStation() {
 
     if (filtered.length === 0) {
         document.getElementById('stationInfo').innerHTML = `
-            <div class="status-box" style="border-left-color: #f44336; background: #ffebee;">
+            <div class="status-box" style="border-left-color: #f44336;">
                 <div class="status-label" style="color: #f44336;">No journeys found</div>
             </div>
+        `;
+        document.getElementById('tableBody').innerHTML = `
+            <tr class="empty-state">
+                <td colspan="6">No journeys at this station</td>
+            </tr>
         `;
         return;
     }
 
     // Count only upcoming journeys
     let upcomingCount = 0;
+    let currentCount = 0;
 
     filtered.forEach(d => {
-        if (timeToMinutes(d.departure) >= currentTime) {
+        const departureTime = timeToMinutes(d.departure);
+        if (departureTime >= currentTime) {
             upcomingCount++;
+        }
+        if (departureTime === currentTime || (departureTime <= currentTime && departureTime + 5 > currentTime)) {
+            currentCount++;
         }
     });
 
     document.getElementById('stationInfo').innerHTML = `
         <div class="status-box">
             <div class="status-label">📍 ${stationMap[stationCode] || stationCode}</div>
-            <div style="margin-top: 10px; color: #666;">
-                <div><span style="color: #4caf50; font-weight: 600;">🟢 ${upcomingCount}</span> upcoming journeys</div>
+            <div style="margin-top: 10px; color: var(--text-secondary);">
+                <div><span style="color: #ff6b6b; font-weight: 600;">🟢 ${currentCount}</span> current trains</div>
+                <div><span style="color: #4caf50; font-weight: 600;">○ ${upcomingCount}</span> upcoming journeys</div>
             </div>
         </div>
     `;
 
-    // Display only upcoming journeys at station
+    // Display only current and upcoming journeys at station
     let html = '';
     filtered.sort((a, b) => timeToMinutes(a.departure) - timeToMinutes(b.departure))
         .forEach(d => {
-            const isUpcoming = timeToMinutes(d.departure) >= currentTime;
+            const departureTime = timeToMinutes(d.departure);
+            const isCurrent = departureTime === currentTime || (departureTime <= currentTime && departureTime + 5 > currentTime);
+            const isUpcoming = departureTime > currentTime;
             
-            // Show only upcoming journeys
-            if (isUpcoming) {
+            // Show only current and upcoming journeys
+            if (isCurrent || isUpcoming) {
                 const journey = journeyData.filter(j => j.journey === d.journey);
                 const nextIdx = journey.findIndex(j => j.station === stationCode) + 1;
                 const nextStop = nextIdx < journey.length ? stationMap[journey[nextIdx].station] : 'Final Stop';
@@ -4427,7 +4440,7 @@ function searchByStation() {
                 html += `
                     <tr class="active-row">
                         <td><span class="journey-id">${d.journey}</span></td>
-                        <td>○ Upcoming</td>
+                        <td>${isCurrent ? '🟢 Current' : '○ Upcoming'}</td>
                         <td><span class="station-badge">${d.station}</span></td>
                         <td><span class="platform-badge">${d.platform}</span></td>
                         <td><span class="time">${d.departure}</span></td>
@@ -4440,28 +4453,33 @@ function searchByStation() {
     document.getElementById('tableBody').innerHTML = html || `
         <tr class="empty-state">
             <td colspan="6">
-                <h3>No upcoming journeys</h3>
+                <h3>No current or upcoming journeys</h3>
                 <p>All trains have departed from this station</p>
             </td>
         </tr>
     `;
 }
 
-        // Auto-update every second
-        setInterval(() => {
-            updateClock();
-            const journeyId = document.getElementById('journeyInput').value.toUpperCase();
-            if (journeyId) {
-                searchJourney();
-            }
-        }, 1000);
+// Auto-update every second
+setInterval(() => {
+    updateClock();
+    const journeyId = document.getElementById('journeyInput').value.toUpperCase();
+    const stationCode = document.getElementById('stationInput').value.toUpperCase();
+    
+    if (journeyId) {
+        searchJourney();
+    } else if (stationCode) {
+        searchByStation();
+    }
+}, 1000);
 
-        // Initial setup
-        updateClock();
+// Initial setup
+updateClock();
     </script>
 </body>
 
 </html>
+
 
 
 
