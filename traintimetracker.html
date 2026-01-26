@@ -9,41 +9,120 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+       }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --accent: #667eea;
+            --accent-dark: #764ba2;
+        }
+
+        body.dark-mode {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #2a2a3e;
+            --accent: #667eea;
+            --accent-dark: #764ba2;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         header {
-            text-align: center;
-            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        h1 {
+        .header-left h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .clock {
-            font-size: 2em;
-            font-weight: bold;
+            font-size: 1.5em;
             font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .theme-toggle {
             background: rgba(255,255,255,0.2);
-            padding: 15px 30px;
-            border-radius: 10px;
-            display: inline-block;
-            margin-top: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
         }
 
         .main-grid {
@@ -54,17 +133,19 @@
         }
 
         .section {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
         .section h2 {
-            color: #667eea;
+            color: var(--accent);
             margin-bottom: 20px;
             font-size: 1.4em;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
         }
 
@@ -74,7 +155,7 @@
 
         label {
             font-weight: 600;
-            color: #333;
+            color: var(--text-primary);
             display: block;
             margin-bottom: 8px;
         }
@@ -82,22 +163,24 @@
         input, select {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             font-size: 1em;
             transition: all 0.3s ease;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background: #667eea;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -109,71 +192,45 @@
         }
 
         button:hover {
-            background: #5568d3;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .status-box {
-            background: #f5f5f5;
+            background: var(--bg-primary);
             padding: 20px;
             border-radius: 8px;
             margin: 15px 0;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--accent);
         }
 
         .status-label {
             font-weight: 600;
-            color: #667eea;
+            color: var(--accent);
             font-size: 0.9em;
         }
 
         .status-value {
             font-size: 1.5em;
-            color: #333;
+            color: var(--text-primary);
             margin-top: 5px;
             font-weight: bold;
         }
 
-        .location-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background: #4caf50;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
-            }
-        }
-
         .results-section {
-            background: white;
+            background: var(--bg-secondary);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .results-header {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
             color: white;
             padding: 20px 30px;
             font-size: 1.2em;
             font-weight: 600;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
         }
 
         table {
@@ -182,20 +239,20 @@
         }
 
         thead tr {
-            background: #f5f5f5;
-            border-bottom: 2px solid #e0e0e0;
+            background: var(--bg-primary);
+            border-bottom: 2px solid var(--border-color);
         }
 
         th {
             padding: 15px 20px;
             text-align: left;
             font-weight: 600;
-            color: #333;
+            color: var(--text-primary);
         }
 
         td {
             padding: 15px 20px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         tbody tr {
@@ -203,24 +260,24 @@
         }
 
         tbody tr:hover {
-            background-color: #f9f9f9;
+            background: var(--bg-secondary);
         }
 
         .active-row {
-            background-color: #fff3cd !important;
-            border-left: 4px solid #ffc107;
+            background: rgba(76, 175, 80, 0.1) !important;
+            border-left: 4px solid #4caf50;
         }
 
         .journey-id {
             font-weight: 600;
-            color: #667eea;
+            color: var(--accent);
         }
 
         .station-badge {
             display: inline-block;
             padding: 6px 12px;
-            background: #e3f2fd;
-            color: #1976d2;
+            background: rgba(102, 126, 234, 0.2);
+            color: var(--accent);
             border-radius: 6px;
             font-size: 0.9em;
             font-weight: 600;
@@ -229,8 +286,8 @@
         .platform-badge {
             display: inline-block;
             padding: 6px 12px;
-            background: #f3e5f5;
-            color: #7b1fa2;
+            background: rgba(118, 75, 162, 0.2);
+            color: var(--accent-dark);
             border-radius: 20px;
             font-size: 0.9em;
             font-weight: 500;
@@ -238,92 +295,176 @@
 
         .time {
             font-family: 'Courier New', monospace;
-            color: #666;
+            color: var(--text-secondary);
             font-weight: 600;
-        }
-
-        .next-station {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #4caf50;
-        }
-
-        .next-station h3 {
-            color: #2e7d32;
-            margin-bottom: 10px;
         }
 
         .empty-state {
             padding: 40px 30px;
             text-align: center;
-            color: #999;
+            color: var(--text-secondary);
         }
 
-        .empty-state h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+        /* Notification Panel */
+        .notification-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            overflow-y: auto;
+            display: none;
         }
 
-        .footer {
-            text-align: center;
+        .notification-panel.show {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notification-header {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
             color: white;
-            margin-top: 30px;
-            opacity: 0.9;
+            padding: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+            margin: 0;
+        }
+
+        .notification-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-journey {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .notification-station {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #4caf50;
+            font-size: 0.95em;
+        }
+
+        .clear-notifications {
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .clear-notifications:hover {
+            background: var(--border-color);
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
             .main-grid {
                 grid-template-columns: 1fr;
             }
 
-            .clock {
-                font-size: 1.5em;
-                padding: 10px 20px;
+            .notification-panel {
+                width: 90%;
+                left: 5%;
+                right: 5%;
             }
 
-            table {
-                font-size: 0.9em;
+            header {
+                flex-direction: column;
+                gap: 15px;
             }
 
-            th, td {
-                padding: 10px;
+            .header-right {
+                width: 100%;
+                justify-content: space-around;
             }
         }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 3px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #4caf50;
-            transition: width 0.3s ease;
-        }
-    </style>
+    </style>        
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="header-left">                    
             <h1>🚌 NS PH-2 Train Time Tracker</h1>
-            <div class="clock" id="currentTime">00:00:00</div>
+                <div class="clock" id="currentTime">00:00:00</div>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText">Dark</span>
+                </button>
+                <div class="notification-bell" id="notificationBell" title="View Notifications">
+                    🔔
+                    <span class="notification-badge" id="notificationBadge">0</span>
+                </div>
+            </div>
         </header>
 
+        <!-- Notification Panel -->
+        <div class="notification-panel" id="notificationPanel">
+            <div class="notification-header">
+                <span>📢 Tracked Journeys</span>
+                <button class="close-btn" onclick="closeNotificationPanel()">✕</button>
+            </div>
+            <div class="notification-list" id="notificationList"></div>
+            <div class="clear-notifications" onclick="clearNotifications()">Clear All</div>
+        </div>        
+
         <div class="main-grid">
-            <!-- Left Panel: Search & Current Status -->
             <div class="section">
-                <h2>🔍 Search Journey</h2>
-                
+                <h2>🔍 Search Journey</h2>         
                 <div class="filter-group">
                     <label for="journeyInput">Journey ID</label>
                     <input type="text" id="journeyInput" list="journeyOptions" placeholder="e.g., 01, 02, 03...11">
@@ -447,6 +588,87 @@
     </div>
 
     <script>
+
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+            themeText.textContent = 'Light';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+        });
+
+        // Notification Management
+        let trackedJourneys = JSON.parse(localStorage.getItem('trackedJourneys')) || [];
+
+        function addNotification(journeyId, station, departure) {
+            const notification = {
+                journey: journeyId,
+                station: station,
+                departure: departure,
+                time: new Date().toLocaleTimeString()
+            };
+
+            trackedJourneys.unshift(notification);
+            if (trackedJourneys.length > 10) {
+                trackedJourneys.pop();
+            }
+            localStorage.setItem('trackedJourneys', JSON.stringify(trackedJourneys));
+            updateNotificationPanel();
+        }
+
+        function updateNotificationPanel() {
+            const badge = document.getElementById('notificationBadge');
+            const list = document.getElementById('notificationList');
+
+            badge.textContent = trackedJourneys.length;
+
+            if (trackedJourneys.length === 0) {
+                list.innerHTML = '<div class="notification-item" style="border-left: none; text-align: center; color: var(--text-secondary);">No tracked journeys</div>';
+                return;
+            }
+
+            list.innerHTML = trackedJourneys.map(notif => `
+                <div class="notification-item">
+                    <div class="notification-journey">${notif.journey}</div>
+                    <div class="notification-station">📍 ${notif.station}</div>
+                    <div class="notification-time">⏱️ ${notif.departure}</div>
+                    <div style="font-size: 0.8em; color: var(--text-secondary); margin-top: 5px;">Tracked at ${notif.time}</div>
+                </div>
+            `).join('');
+        }
+
+        function closeNotificationPanel() {
+            document.getElementById('notificationPanel').classList.remove('show');
+        }
+
+        function clearNotifications() {
+            trackedJourneys = [];
+            localStorage.setItem('trackedJourneys', JSON.stringify(trackedJourneys));
+            updateNotificationPanel();
+        }
+
+        document.getElementById('notificationBell').addEventListener('click', () => {
+            document.getElementById('notificationPanel').classList.toggle('show');
+        });
+        
         // Complete station mapping
         const stationMap = {
             "APMC": "APMC",
@@ -4292,70 +4514,107 @@
             return { currentStop, nextStop, allStops: journeyStops };
         }
 
-        // Search journey
-        function searchJourney() {
-            const journeyId = document.getElementById('journeyInput').value.toUpperCase();
-            const result = findCurrentLocation(journeyId);
+// Request notification permission on page load
+function requestNotificationPermission() {
+    if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+            console.log('Notifications already enabled');
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    console.log('Notifications enabled');
+                }
+            });
+        }
+    }
+}
 
-            if (result.allStops.length === 0) {
-                document.getElementById('currentStatus').innerHTML = `
-                    <div class="status-box" style="border-left-color: #f44336; background: #ffebee;">
-                        <div class="status-label" style="color: #f44336;">❌ Journey Not Found</div>
-                        <div class="status-value">No data for ${journeyId}</div>
-                    </div>
-                `;
-                document.getElementById('tableBody').innerHTML = `
-                    <tr class="empty-state">
-                        <td colspan="6">
-                            <h3>Journey not found</h3>
-                            <p>Try another Journey ID</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+// Send browser notification
+function sendBrowserNotification(journeyId, station, platform, departure) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        const notification = new Notification(`🚌 Journey ${journeyId}`, {
+            body: `📍 Current Station: ${stationMap[station] || station}\n🚪 Platform: ${platform}\n⏱️ Departure: ${departure}`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="75" font-size="75">🚌</text></svg>',
+            tag: `journey-${journeyId}`,
+            requireInteraction: false,
+            badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23667eea"/></svg>'
+        });
 
-            if (!result.currentStop) {
-                document.getElementById('currentStatus').innerHTML = `
-                    <div class="status-box" style="border-left-color: #2196f3; background: #e3f2fd;">
-                        <div class="status-label" style="color: #2196f3;">⏱️ Not Started</div>
-                        <div class="status-value">${journeyId} starts at ${result.allStops[0].departure}</div>
-                    </div>
-                `;
-            } else {
-                const timeUntilNext = result.nextStop 
-                    ? Math.round(timeToMinutes(result.nextStop.departure) - getCurrentTimeInMinutes())
-                    : 0;
+        // Auto close after 10 seconds
+        setTimeout(() => notification.close(), 10000);
+    }
+}
 
-                document.getElementById('currentStatus').innerHTML = `
-                    <div class="status-box">
-                        <div class="status-label"><span class="location-indicator"></span>LIVE Location</div>
-                        <div class="status-value">${stationMap[result.currentStop.station]}</div>
-                        <div style="color: #666; margin-top: 8px;">Departed: ${result.currentStop.departure}</div>
-                    </div>
-                    ${result.nextStop ? `
-                    <div class="next-station">
-                        <h3>→ Next Stop</h3>
-                        <div><strong>${stationMap[result.nextStop.station]}</strong></div>
-                        <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
-                            Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${Math.round((result.allStops.indexOf(result.currentStop) / result.allStops.length) * 100)}%"></div>
-                        </div>
-                    </div>
-                    ` : '<div style="color: #f44336; margin-top: 15px;">⏁ Journey Completed</div>'}
-                `;
-            }
 
-    // Display only current and upcoming stops
-    let html = '';
+// Modified searchJourney with notifications
+function searchJourney() {
+    const journeyId = lastJourneyId || document.getElementById('journeyInput').value.toUpperCase();
+    const stops = journeyData.filter(d => d.journey === journeyId).sort((a, b) => 
+        timeToMinutes(a.departure) - timeToMinutes(b.departure)
+    );
+
+    if (stops.length === 0) {
+        document.getElementById('currentStatus').innerHTML = `
+            <div class="status-box" style="border-left-color: #f44336;">
+                <div class="status-label" style="color: #f44336;">❌ Journey Not Found</div>
+            </div>
+        `;
+        document.getElementById('tableBody').innerHTML = `
+            <tr class="empty-state">
+                <td colspan="6">Journey not found</td>
+            </tr>
+        `;
+        return;
+    }
+
     const currentTime = getCurrentTimeInMinutes();
+    let currentStop = null;
+    let nextStop = null;
+    let previousStop = null;
+
+
+    // Find current and next stop based on real-time
+    for (let i = 0; i < stops.length; i++) {
+        const stopTime = timeToMinutes(stops[i].departure);
+        if (stopTime <= currentTime) {
+            previousStop = currentStop;
+            currentStop = stops[i];
+        } else if (!nextStop) {
+            nextStop = stops[i];
+        }
+    }
+
+
+
+    // Update status in real-time
+    document.getElementById('currentStatus').innerHTML = `
+        <div class="status-box">
+            <div class="status-label">🟢 LIVE Location</div>
+            <div class="status-value">${currentStop ? stationMap[currentStop.station] || currentStop.station : 'Starting Soon'}</div>
+            <div style="color: var(--text-secondary); margin-top: 8px;">
+                ${currentStop ? `Departed: ${currentStop.departure}` : `First stop: ${stops[0].station}`}
+            </div>
+        </div>
+        ${nextStop ? `
+        <div class="status-box">
+            <div class="status-label">→ Next Stop</div>
+            <div class="status-value">${stationMap[nextStop.station] || nextStop.station}</div>
+            <div style="color: var(--text-secondary); margin-top: 8px;">Departure: ${nextStop.departure}</div>
+        </div>
+        ` : '<div style="color: #f44336; margin-top: 15px;">✓ Journey Completed</div>'}
+    `;
+
     
-    result.allStops.forEach((stop, idx) => {
-        const stopTime = timeToMinutes(stop.departure);
-        const isActive = stop === result.currentStop;
-        const isUpcoming = stopTime >= currentTime;
+    // Send notification if location changed
+    if (currentStop && currentStop !== previousStop) {
+        sendBrowserNotification(
+            journeyId, 
+            currentStop.station, 
+            currentStop.platform, 
+            currentStop.departure
+        );
+        addNotification(journeyId, currentStop.station, currentStop.departure);
+    }
 
         // Show only current and upcoming stops
         if (isActive || isUpcoming) {
@@ -4375,6 +4634,8 @@
     document.getElementById('tableBody').innerHTML = html;
 }
 
+        
+        
 // Search by station - Show only current and upcoming trains
 function searchByStation() {
     const stationCode = document.getElementById('stationInput').value.toUpperCase();
@@ -4431,33 +4692,51 @@ function searchByStation() {
             const isCurrent = departureTime === currentTime || (departureTime <= currentTime && departureTime + 5 > currentTime);
             const isUpcoming = departureTime > currentTime;
             
-            // Show only current and upcoming journeys
-            if (isCurrent || isUpcoming) {
-                const journey = journeyData.filter(j => j.journey === d.journey);
-                const nextIdx = journey.findIndex(j => j.station === stationCode) + 1;
-                const nextStop = nextIdx < journey.length ? stationMap[journey[nextIdx].station] : 'Final Stop';
-
-                html += `
-                    <tr class="active-row">
-                        <td><span class="journey-id">${d.journey}</span></td>
-                        <td>${isCurrent ? '🟢 Current' : '○ Upcoming'}</td>
-                        <td><span class="station-badge">${d.station}</span></td>
-                        <td><span class="platform-badge">${d.platform}</span></td>
-                        <td><span class="time">${d.departure}</span></td>
-                        <td>${nextStop}</td>
-                    </tr>
-                `;
-            }
-        });
+    // Display only upcoming journeys
+    let html = '';
+    stops.forEach((stop, idx) => {
+        const isUpcoming = timeToMinutes(stop.departure) >= currentTime;
+        
+        if (isUpcoming) {
+            html += `
+                <tr class="active-row">
+                    <td><span class="journey-id">${stop.journey}</span></td>
+                    <td>${stop === currentStop ? '🟢 Current' : '○ Upcoming'}</td>
+                    <td><span class="station-badge">${stop.station}</span></td>
+                    <td><span class="platform-badge">${stop.platform}</span></td>
+                    <td><span class="time">${stop.departure}</span></td>
+                    <td>${idx < stops.length - 1 ? stationMap[stops[idx + 1].station] || stops[idx + 1].station : 'Final Stop'}</td>
+                </tr>
+            `;
+        }
+    });
 
     document.getElementById('tableBody').innerHTML = html || `
         <tr class="empty-state">
-            <td colspan="6">
-                <h3>No current or upcoming journeys</h3>
-                <p>All trains have departed from this station</p>
-            </td>
+            <td colspan="6">No upcoming stops</td>
         </tr>
     `;
+}
+
+                 // Add notification permission button to header
+function addNotificationButton() {
+    const headerRight = document.querySelector('.header-right');
+    const notifBtn = document.createElement('button');
+    notifBtn.id = 'enableNotifications';
+    notifBtn.className = 'theme-toggle';
+    notifBtn.innerHTML = '🔔 Enable Alerts';
+    notifBtn.title = 'Enable browser notifications for live location';
+    notifBtn.style.marginRight = '10px';
+    
+    notifBtn.addEventListener('click', () => {
+        requestNotificationPermission();
+        if ('Notification' in window && Notification.permission === 'granted') {
+            notifBtn.innerHTML = '✓ Alerts ON';
+            notifBtn.style.background = 'rgba(76, 175, 80, 0.2)';
+        }
+    });
+
+    headerRight.insertBefore(notifBtn, headerRight.firstChild);
 }
 
 // Auto-update every second
@@ -4471,14 +4750,20 @@ setInterval(() => {
     } else if (stationCode) {
         searchByStation();
     }
-}, 1000);
+}, 500);
 
-// Initial setup
-updateClock();
+
+// Initialize on page load
+window.addEventListener('load', () => {
+    requestNotificationPermission();
+    addNotificationButton();
+    updateClock();
+});
     </script>
 </body>
 
 </html>
+
 
 
 
