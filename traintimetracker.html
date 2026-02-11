@@ -4463,61 +4463,96 @@
         }
 
         // Search journey
-        function searchJourney() {
-            const journeyId = document.getElementById('journeyInput').value.toUpperCase();
-            const result = findCurrentLocation(journeyId);
-
-            if (result.allStops.length === 0) {
-                document.getElementById('currentStatus').innerHTML = `
-                    <div class="status-box" style="border-left-color: #f44336; background: #ffebee;">
-                        <div class="status-label" style="color: #f44336;">❌ Journey Not Found</div>
-                        <div class="status-value">No data for ${journeyId}</div>
+function searchJourney() {
+    const journeyId = document.getElementById('journeyInput').value.toUpperCase();
+    const result = findCurrentLocation(journeyId);
+    
+    if (result.allStops.length === 0) {
+        document.getElementById('currentStatus').innerHTML = `
+            <div class="status-box" style="border-left-color: #f44336; background: #ffebee;">
+                <div class="status-label" style="color: #f44336;">❌ Journey Not Found</div>
+                <div class="status-value">No data for ${journeyId}</div>
+            </div>
+        `;
+        document.getElementById('tableBody').innerHTML = `
+            <tr class="empty-state">
+                <td colspan="6">
+                    <h3>Journey not found</h3>
+                    <p>Try another Journey ID</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    if (!result.currentStop) {
+        document.getElementById('currentStatus').innerHTML = `
+            <div class="status-box" style="border-left-color: #2196f3; background: #e3f2fd;">
+                <div class="status-label" style="color: #2196f3;">⏱️ Not Started</div>
+                <div class="status-value">${journeyId} starts at ${result.allStops[0].departure}</div>
+            </div>
+        `;
+    } else {
+        const currentTime = getCurrentTimeInMinutes();
+        
+        if (result.nextStop) {
+            const currentStationTime = timeToMinutes(result.currentStop.departure);
+            const nextStationTime = timeToMinutes(result.nextStop.departure);
+            const totalTimeToNext = nextStationTime - currentStationTime;
+            const timeElapsed = currentTime - currentStationTime;
+            
+            // Calculate progress percentage (0-100%)
+            let progressPercent = (timeElapsed / totalTimeToNext) * 100;
+            progressPercent = Math.max(0, Math.min(100, progressPercent)); // Clamp between 0-100
+            
+            const timeUntilNext = Math.round(nextStationTime - currentTime);
+            
+            document.getElementById('currentStatus').innerHTML = `
+                <div class="status-box">
+                    <div class="status-label"><span class="location-indicator"></span>LIVE Location</div>
+                    <div class="status-value">${stationMap[result.currentStop.station]}</div>
+                    <div style="color: #666; margin-top: 8px;">Departed: ${result.currentStop.departure}</div>
+                </div>
+                <div class="next-station">
+                    <h3>→ Next Stop</h3>
+                    <div><strong>${stationMap[result.nextStop.station]}</strong></div>
+                    <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
+                        Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
                     </div>
-                `;
-                document.getElementById('tableBody').innerHTML = `
-                    <tr class="empty-state">
-                        <td colspan="6">
-                            <h3>Journey not found</h3>
-                            <p>Try another Journey ID</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            if (!result.currentStop) {
-                document.getElementById('currentStatus').innerHTML = `
-                    <div class="status-box" style="border-left-color: #2196f3; background: #e3f2fd;">
-                        <div class="status-label" style="color: #2196f3;">⏱️ Not Started</div>
-                        <div class="status-value">${journeyId} starts at ${result.allStops[0].departure}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progressPercent}%"></div>
                     </div>
-                `;
-            } else {
-                const timeUntilNext = result.nextStop 
-                    ? Math.round(timeToMinutes(result.nextStop.departure) - getCurrentTimeInMinutes())
-                    : 0;
-
-                document.getElementById('currentStatus').innerHTML = `
-                    <div class="status-box">
-                        <div class="status-label"><span class="location-indicator"></span>LIVE Location</div>
-                        <div class="status-value">${stationMap[result.currentStop.station]}</div>
-                        <div style="color: #666; margin-top: 8px;">Departed: ${result.currentStop.departure}</div>
-                    </div>
-                    ${result.nextStop ? `
-                    <div class="next-station">
-                        <h3>→ Next Stop</h3>
-                        <div><strong>${stationMap[result.nextStop.station]}</strong></div>
-                        <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
-                            Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${Math.round((result.allStops.indexOf(result.currentStop) / result.allStops.length) * 100)}%"></div>
-                        </div>
-                    </div>
-                    ` : '<div style="color: #f44336; margin-top: 15px;">⏁ Journey Completed</div>'}
-                `;
-            }
-
+                </div>
+            `;
+        } else {
+            document.getElementById('currentStatus').innerHTML = `
+                <div class="status-box">
+                    <div class="status-label"><span class="location-indicator"></span>LIVE Location</div>
+                    <div class="status-value">${stationMap[result.currentStop.station]}</div>
+                    <div style="color: #666; margin-top: 8px;">Departed: ${result.currentStop.departure}</div>
+                </div>
+                <div style="color: #f44336; margin-top: 15px;">⏁ Journey Completed</div>
+            `;
+        }
+    }
+    
+    // Rest of the table rendering code...
+    let tableHTML = '';
+    result.allStops.forEach((stop, index) => {
+        const isActive = result.currentStop && stop.station === result.currentStop.station;
+        tableHTML += `
+            <tr class="${isActive ? 'active-row' : ''}">
+                <td class="journey-id">${stop.journey}</td>
+                <td><span class="station-badge">${stationMap[stop.station]}</span></td>
+                <td><span class="platform-badge">Platform ${stop.platform}</span></td>
+                <td class="time">${stop.departure}</td>
+                <td>${stop.status}</td>
+                <td>${index < result.allStops.length - 1 ? stationMap[result.allStops[index + 1].station] : '-'}</td>
+            </tr>
+        `;
+    });
+    document.getElementById('tableBody').innerHTML = tableHTML;
+}
     // Display only current and upcoming stops
     let html = '';
     const currentTime = getCurrentTimeInMinutes();
@@ -4649,6 +4684,7 @@ updateClock();
 </body>
 
 </html>
+
 
 
 
