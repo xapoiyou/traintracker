@@ -4530,7 +4530,7 @@
                             <h3>→ Next Stop</h3>
                             <div><strong>${stationMap[result.nextStop.station]}</strong></div>
                             <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
-                                Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
+                                Departs in ${timeUntilNext} minutes at ${result.nextStop.departure}
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" style="width: ${progressPercent.toFixed(1)}%"></div>
@@ -4552,21 +4552,47 @@
                 }
             }
             
-            // Rest of the table rendering code...
+            // Display only current and upcoming stops
+            const currentTime = getCurrentTimeInMinutes();
             let tableHTML = '';
+            
             result.allStops.forEach((stop, index) => {
-                const isActive = result.currentStop && stop.station === result.currentStop.station;
-                tableHTML += `
-                    <tr class="${isActive ? 'active-row' : ''}">
-                        <td class="journey-id">${stop.journey}</td>
-                        <td><span class="station-badge">${stationMap[stop.station]}</span></td>
-                        <td><span class="platform-badge">Platform ${stop.platform}</span></td>
-                        <td class="time">${stop.departure}</td>
-                        <td>${stop.status}</td>
-                        <td>${index < result.allStops.length - 1 ? stationMap[result.allStops[index + 1].station] : '-'}</td>
+                const stopTime = timeToMinutes(stop.departure);
+                const isCurrentStop = result.currentStop && stop.station === result.currentStop.station;
+                const isUpcoming = stopTime > currentTime;
+                
+                // Show only current and upcoming stops
+                if (isCurrentStop || isUpcoming) {
+                    const status = isCurrentStop ? 'Current' : 'Upcoming';
+                    const statusIcon = isCurrentStop ? '🟢' : '○';
+                    const nextStopName = index < result.allStops.length - 1 
+                        ? stationMap[result.allStops[index + 1].station] 
+                        : '-';
+                    
+                    tableHTML += `
+                        <tr class="${isCurrentStop ? 'active-row' : ''}">
+                            <td class="journey-id">${stop.journey}</td>
+                            <td>${statusIcon} ${status}</td>
+                            <td><span class="station-badge">${stationMap[stop.station]}</span></td>
+                            <td><span class="platform-badge">${stop.platform}</span></td>
+                            <td class="time">${stop.departure}</td>
+                            <td>${nextStopName}</td>
+                        </tr>
+                    `;
+                }
+            });
+            
+            if (tableHTML === '') {
+                tableHTML = `
+                    <tr class="empty-state">
+                        <td colspan="6">
+                            <h3>Journey Completed</h3>
+                            <p>All stops have been passed</p>
+                        </td>
                     </tr>
                 `;
-            });
+            }
+            
             document.getElementById('tableBody').innerHTML = tableHTML;
         }
 
@@ -4632,11 +4658,14 @@
                         const nextIdx = journey.findIndex(j => j.station === stationCode) + 1;
                         const nextStop = nextIdx < journey.length ? stationMap[journey[nextIdx].station] : 'Final Stop';
 
+                        const status = isCurrent ? 'Current' : 'Upcoming';
+                        const statusIcon = isCurrent ? '🟢' : '○';
+
                         html += `
-                            <tr class="active-row">
+                            <tr ${isCurrent ? 'class="active-row"' : ''}>
                                 <td><span class="journey-id">${d.journey}</span></td>
-                                <td>${isCurrent ? '🟢 Current' : '○ Upcoming'}</td>
-                                <td><span class="station-badge">${d.station}</span></td>
+                                <td>${statusIcon} ${status}</td>
+                                <td><span class="station-badge">${stationMap[d.station]}</span></td>
                                 <td><span class="platform-badge">${d.platform}</span></td>
                                 <td><span class="time">${d.departure}</span></td>
                                 <td>${nextStop}</td>
@@ -4655,7 +4684,7 @@
             `;
         }
 
-        // Auto-update every second (changed from 500ms to 1000ms for smooth updates)
+        // Auto-update every second
         setInterval(() => {
             updateClock();
             const journeyId = document.getElementById('journeyInput').value.toUpperCase();
@@ -4666,7 +4695,7 @@
             } else if (stationCode) {
                 searchByStation();
             }
-        }, 1000); // Update every 1 second for smooth progress bar
+        }, 1000);
 
         // Initial setup
         updateClock();
@@ -4674,6 +4703,7 @@
 </body>
 
 </html>
+
 
 
 
