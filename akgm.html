@@ -4574,9 +4574,6 @@
                     };
                 }
             });
-
-            // Convert to array and sort by original journey order (by index)
-            const uniqueStops = Object.values(stationLastOccurrence).sort((a, b) => a.index - b.index);
                         
             // Now display only the last occurrence of each station
             Object.values(stationLastOccurrence).forEach(({stop, index, isCurrentStop, isUpcoming}) => {
@@ -4586,11 +4583,6 @@
                     ? stationMap[result.allStops[index + 1].station] 
                     : '-';
 
-                // Find the actual next stop in the journey by looking at the next item in uniqueStops array
-                let nextStopName = '-';
-                if (arrayIndex < uniqueStops.length - 1) {
-                    nextStopName = stationMap[uniqueStops[arrayIndex + 1].stop.station];
-                }
                          
                 tableHTML += `
                     <tr class="${isCurrentStop ? 'active-row' : ''}">
@@ -4725,6 +4717,7 @@
 </body>
 
 </html>
+
 
 
 
