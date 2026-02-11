@@ -4451,7 +4451,7 @@
             return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
         }
 
-        // Find current location of journey
+// Find current location of journey
         function findCurrentLocation(journeyId) {
             const journeyStops = journeyData.filter(d => d.journey === journeyId).sort((a, b) => 
                 timeToMinutes(a.departure) - timeToMinutes(b.departure)
@@ -4461,20 +4461,28 @@
             let currentStop = null;
             let nextStop = null;
 
-            for (let i = 0; i < journeyStops.length; i++) {
+            // Find the LAST departed stop as current
+            for (let i = journeyStops.length - 1; i >= 0; i--) {
                 const stopTime = timeToMinutes(journeyStops[i].departure);
                 if (stopTime <= currentTime) {
                     currentStop = journeyStops[i];
-                } else if (nextStop === null) {
-                    nextStop = journeyStops[i];
+                    // Find next stop after current
+                    if (i + 1 < journeyStops.length) {
+                        nextStop = journeyStops[i + 1];
+                    }
                     break;
                 }
+            }
+            
+            // If no current stop found, get the first upcoming one
+            if (!currentStop && journeyStops.length > 0) {
+                nextStop = journeyStops[0];
             }
 
             return { currentStop, nextStop, allStops: journeyStops };
         }
 
-// Search journey
+        // Search journey
         function searchJourney() {
             const journeyId = document.getElementById('journeyInput').value.toUpperCase();
             const result = findCurrentLocation(journeyId);
@@ -4552,40 +4560,51 @@
                 }
             }
             
-            // Display only current and upcoming stops - FILTER OUT DUPLICATE STATIONS
+            // Display only current and upcoming stops - SHOW UNIQUE STATIONS
             const currentTime = getCurrentTimeInMinutes();
             let tableHTML = '';
             
-            // Create a map to track the last occurrence of each station
-            const stationLastOccurrence = {};
-            result.allStops.forEach((stop, index) => {
+            // Find current stop index
+            let currentStopIndex = -1;
+            if (result.currentStop) {
+                currentStopIndex = result.allStops.findIndex(s => 
+                    s.station === result.currentStop.station && 
+                    s.departure === result.currentStop.departure
+                );
+            }
+            
+            // Create array of stops to display (from current onwards)
+            const stopsToShow = [];
+            const seenStations = new Set();
+            
+            for (let i = 0; i < result.allStops.length; i++) {
+                const stop = result.allStops[i];
                 const stopTime = timeToMinutes(stop.departure);
-                const isCurrentStop = result.currentStop && stop.station === result.currentStop.station && stop.departure === result.currentStop.departure;
-                const isUpcoming = stopTime > currentTime;
                 
-                // Only track current and upcoming stops
-                if (isCurrentStop || isUpcoming) {
-                    // Keep updating to get the LAST occurrence of each station
-                    stationLastOccurrence[stop.station] = {
-                        stop: stop,
-                        index: index,
-                        isCurrentStop: isCurrentStop,
-                        isUpcoming: isUpcoming
-                    };
+                // Include if it's the current stop OR if it's upcoming
+                if (i === currentStopIndex || stopTime > currentTime) {
+                    // Only add if we haven't seen this station yet (keep first occurrence from this point)
+                    if (!seenStations.has(stop.station)) {
+                        seenStations.add(stop.station);
+                        stopsToShow.push({
+                            stop: stop,
+                            index: i,
+                            isCurrent: i === currentStopIndex
+                        });
+                    }
                 }
-            });
-                        
-            // Now display only the last occurrence of each station
-            Object.values(stationLastOccurrence).forEach(({stop, index, isCurrentStop, isUpcoming}) => {
-                const statusText = isCurrentStop ? 'Current' : 'Upcoming';
-                const statusIcon = isCurrentStop ? '🟢' : '○';
+            }
+            
+            // Generate table rows
+            stopsToShow.forEach(({stop, index, isCurrent}) => {
+                const statusText = isCurrent ? 'Current' : 'Upcoming';
+                const statusIcon = isCurrent ? '🟢' : '○';
                 const nextStopName = index < result.allStops.length - 1 
                     ? stationMap[result.allStops[index + 1].station] 
                     : '-';
-
-                         
+                
                 tableHTML += `
-                    <tr class="${isCurrentStop ? 'active-row' : ''}">
+                    <tr class="${isCurrent ? 'active-row' : ''}">
                         <td class="journey-id">${stop.journey}</td>
                         <td>${statusIcon} ${statusText}</td>
                         <td><span class="station-badge">${stationMap[stop.station]}</span></td>
@@ -4609,7 +4628,6 @@
             
             document.getElementById('tableBody').innerHTML = tableHTML;
         }
-
         // Search by station - Show only current and upcoming trains
         function searchByStation() {
             const stationCode = document.getElementById('stationInput').value.toUpperCase();
@@ -4717,6 +4735,7 @@
 </body>
 
 </html>
+
 
 
 
