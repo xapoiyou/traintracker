@@ -4571,12 +4571,12 @@
                     
                     tableHTML += `
                         <tr class="${isCurrentStop ? 'active-row' : ''}">
-                            <td class="journey-id">${stop.journey}</td>
-                            <td>${statusIcon} ${status}</td>
-                            <td><span class="station-badge">${stationMap[stop.station]}</span></td>
-                            <td><span class="platform-badge">${stop.platform}</span></td>
-                            <td class="time">${stop.departure}</td>
-                            <td>${nextStopName}</td>
+                            <td class="journey-id">${stop.journey}</td>              // JOURNEY
+                            <td>${statusIcon} ${statusText}</td>                      // STATUS (Current/Upcoming)
+                            <td><span class="station-badge">${stationMap[stop.station]}</span></td>  // CURRENT STATION
+                            <td><span class="platform-badge">${stop.platform}</span></td>  // PLATFORM (just code)
+                            <td class="time">${stop.departure}</td>                   // DEPARTURE TIME
+                            <td>${nextStopName}</td>                                  // NEXT STOP
                         </tr>
                     `;
                 }
@@ -4703,6 +4703,7 @@
 </body>
 
 </html>
+
 
 
 
