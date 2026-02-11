@@ -4474,7 +4474,7 @@
             return { currentStop, nextStop, allStops: journeyStops };
         }
 
-        // Search journey
+// Search journey
         function searchJourney() {
             const journeyId = document.getElementById('journeyInput').value.toUpperCase();
             const result = findCurrentLocation(journeyId);
@@ -4513,12 +4513,12 @@
                     const totalTimeToNext = nextStationTime - currentStationTime;
                     const timeElapsed = currentTimeSeconds - currentStationTime;
                     
-                    // Calculate progress percentage (0-100%) based on seconds
+                    // Calculate progress percentage (0-100%)
                     let progressPercent = (timeElapsed / totalTimeToNext) * 100;
-                    progressPercent = Math.max(0, Math.min(100, progressPercent)); // Clamp between 0-100
+                    progressPercent = Math.max(0, Math.min(100, progressPercent));
                     
                     const timeUntilNextSec = nextStationTime - currentTimeSeconds;
-                    const timeUntilNext = Math.ceil(timeUntilNextSec / 60); // Convert to minutes
+                    const timeUntilNext = Math.ceil(timeUntilNextSec / 60);
                     
                     document.getElementById('currentStatus').innerHTML = `
                         <div class="status-box">
@@ -4530,7 +4530,7 @@
                             <h3>→ Next Stop</h3>
                             <div><strong>${stationMap[result.nextStop.station]}</strong></div>
                             <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
-                                Departs in ${timeUntilNext} minutes at ${result.nextStop.departure}
+                                Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" style="width: ${progressPercent.toFixed(1)}%"></div>
@@ -4552,34 +4552,47 @@
                 }
             }
             
-            // Display only current and upcoming stops
+            // Display only current and upcoming stops - FILTER OUT DUPLICATE STATIONS
             const currentTime = getCurrentTimeInMinutes();
             let tableHTML = '';
             
+            // Create a map to track the last occurrence of each station
+            const stationLastOccurrence = {};
             result.allStops.forEach((stop, index) => {
                 const stopTime = timeToMinutes(stop.departure);
-                const isCurrentStop = result.currentStop && stop.station === result.currentStop.station;
+                const isCurrentStop = result.currentStop && stop.station === result.currentStop.station && stop.departure === result.currentStop.departure;
                 const isUpcoming = stopTime > currentTime;
                 
-                // Show only current and upcoming stops
+                // Only track current and upcoming stops
                 if (isCurrentStop || isUpcoming) {
-                    const status = isCurrentStop ? 'Current' : 'Upcoming';
-                    const statusIcon = isCurrentStop ? '🟢' : '○';
-                    const nextStopName = index < result.allStops.length - 1 
-                        ? stationMap[result.allStops[index + 1].station] 
-                        : '-';
-                    
-                    tableHTML += `
-                        <tr class="${isCurrentStop ? 'active-row' : ''}">
-                            <td class="journey-id">${stop.journey}</td>              // JOURNEY
-                            <td>${statusIcon} ${statusText}</td>                      // STATUS (Current/Upcoming)
-                            <td><span class="station-badge">${stationMap[stop.station]}</span></td>  // CURRENT STATION
-                            <td><span class="platform-badge">${stop.platform}</span></td>  // PLATFORM (just code)
-                            <td class="time">${stop.departure}</td>                   // DEPARTURE TIME
-                            <td>${nextStopName}</td>                                  // NEXT STOP
-                        </tr>
-                    `;
+                    // Keep updating to get the LAST occurrence of each station
+                    stationLastOccurrence[stop.station] = {
+                        stop: stop,
+                        index: index,
+                        isCurrentStop: isCurrentStop,
+                        isUpcoming: isUpcoming
+                    };
                 }
+            });
+            
+            // Now display only the last occurrence of each station
+            Object.values(stationLastOccurrence).forEach(({stop, index, isCurrentStop, isUpcoming}) => {
+                const statusText = isCurrentStop ? 'Current' : 'Upcoming';
+                const statusIcon = isCurrentStop ? '🟢' : '○';
+                const nextStopName = index < result.allStops.length - 1 
+                    ? stationMap[result.allStops[index + 1].station] 
+                    : '-';
+                
+                tableHTML += `
+                    <tr class="${isCurrentStop ? 'active-row' : ''}">
+                        <td class="journey-id">${stop.journey}</td>
+                        <td>${statusIcon} ${statusText}</td>
+                        <td><span class="station-badge">${stationMap[stop.station]}</span></td>
+                        <td><span class="platform-badge">${stop.platform}</span></td>
+                        <td class="time">${stop.departure}</td>
+                        <td>${nextStopName}</td>
+                    </tr>
+                `;
             });
             
             if (tableHTML === '') {
@@ -4703,6 +4716,7 @@
 </body>
 
 </html>
+
 
 
 
