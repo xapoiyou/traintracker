@@ -6,20 +6,8 @@
     <title>NS PH-2 Train Time Tracker</title>
     <style>
 /* ================================================================
-   CSSDA 2025-2026 AWARD-WINNING DESIGN
-   Transport Tracker - Next Generation Interface
-   
-   Features Modern CSS Trends:
-   - Container Queries for component-based responsivity
-   - Scroll-driven animations & View Transitions
-   - Modern color spaces (LCH, LAB)
-   - CSS Subgrid for perfect alignment
-   - Performance-first architecture
-   - Accessibility-focused design
-   - Dark mode with prefers-color-scheme
-   - :has() pseudo-class for dynamic styling
-   - Advanced CSS Grid with masonry
-   - Scroll-timeline animations
+   CSSDA 2025-2026 AWARD-WINNING DESIGN - FIXED TABLE LAYOUT
+   Transport Tracker - Perfect Alignment Edition
    ================================================================ */
 
 @layer reset, base, components, utilities;
@@ -169,7 +157,7 @@
 @layer base {
   .container {
     --container-padding: var(--space-m);
-    --container-max-width: 1400px;
+    --container-max-width: 1600px;
     
     width: min(100% - (var(--container-padding) * 2), var(--container-max-width));
     margin-inline: auto;
@@ -708,7 +696,7 @@
 }
 
 /* ================================================================
-   TABLE - MODERN DATA DISPLAY
+   TABLE - FIXED LAYOUT WITH PERFECT ALIGNMENT
    ================================================================ */
 
 @layer components {
@@ -747,86 +735,114 @@
     overscroll-behavior-x: contain;
   }
   
+  /* FIXED TABLE LAYOUT - THIS IS THE KEY FIX */
   table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
-    
-    /* Subgrid for perfect alignment */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
   
-  thead,
-  tbody,
-  tr {
-    display: contents;
+  /* Define exact column widths for perfect alignment */
+  colgroup col:nth-child(1) { width: 8%; }   /* Journey */
+  colgroup col:nth-child(2) { width: 10%; }  /* Status */
+  colgroup col:nth-child(3) { width: 14%; }  /* Current Station */
+  colgroup col:nth-child(4) { width: 8%; }   /* Platform */
+  colgroup col:nth-child(5) { width: 12%; }  /* Departure Time */
+  colgroup col:nth-child(6) { width: 14%; }  /* Next Stop */
+  colgroup col:nth-child(7) { width: 8%; }   /* Journey (right) */
+  colgroup col:nth-child(8) { width: 10%; }  /* Status (right) */
+  colgroup col:nth-child(9) { width: 12%; }  /* Time (right) */
+  colgroup col:nth-child(10) { width: 14%; } /* Destination */
+  
+  thead tr {
+    background: linear-gradient(135deg, var(--color-surface), var(--color-background));
   }
   
   th {
-    padding: var(--space-m) var(--space-l);
+    padding: var(--space-m) var(--space-s);
     
-    font-size: var(--font-size-sm);
-    font-weight: 700;
-    text-align: left;
+    font-size: var(--font-size-xs);
+    font-weight: 800;
+    text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-secondary);
     
-    background: linear-gradient(
-      135deg,
-      var(--color-surface),
-      var(--color-background)
-    );
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 3px solid var(--color-border);
     
     position: sticky;
     top: 0;
     z-index: 10;
+    
+    /* Prevent text wrapping */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   td {
-    padding: var(--space-m) var(--space-l);
+    padding: var(--space-m) var(--space-s);
     border-bottom: 1px solid lch(var(--color-border) / 0.5);
+    
+    /* Center align all content */
+    text-align: center;
+    vertical-align: middle;
+    
+    /* Prevent text wrapping and overflow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   tbody tr {
-    display: contents;
-  }
-  
-  tbody tr > * {
     background: var(--color-surface);
     transition: all 0.3s var(--ease-out);
   }
   
-  tbody tr:hover > * {
+  tbody tr:hover {
     background: linear-gradient(
       90deg,
       lch(var(--primary-l) var(--primary-c) var(--primary-h) / 0.05),
-      transparent
+      transparent,
+      lch(var(--primary-l) var(--primary-c) var(--primary-h) / 0.05)
     );
-    transform: scale(1.01);
+    transform: scale(1.005);
+    box-shadow: 0 2px 8px lch(0 0 0 / 0.1);
   }
   
-  /* Active row styling using :has() */
-  tbody tr:has(.active-indicator) > * {
+  /* Active row styling */
+  tbody tr.active-row {
     background: linear-gradient(
       90deg,
-      lch(80 95 85 / 0.1),
-      transparent
+      lch(80 95 85 / 0.15),
+      lch(80 95 85 / 0.08),
+      lch(80 95 85 / 0.15)
     );
-    border-left: 4px solid var(--color-warning);
-    box-shadow: inset 0 0 20px lch(80 95 85 / 0.1);
+    border-left: 5px solid var(--color-warning);
+    box-shadow: 
+      inset 0 0 30px lch(80 95 85 / 0.1),
+      0 4px 12px lch(80 95 85 / 0.2);
+  }
+  
+  tbody tr.active-row:hover {
+    background: linear-gradient(
+      90deg,
+      lch(80 95 85 / 0.2),
+      lch(80 95 85 / 0.12),
+      lch(80 95 85 / 0.2)
+    );
   }
 }
 
 /* ================================================================
-   BADGES - MICRO-INTERACTIONS
+   BADGES - CONSISTENT SIZING AND ALIGNMENT
    ================================================================ */
 
 @layer components {
   .journey-id {
     font-weight: 900;
     font-variant-numeric: tabular-nums;
+    font-size: var(--font-size-base);
     
     background: linear-gradient(
       135deg,
@@ -842,55 +858,64 @@
   .platform-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2xs);
+    justify-content: center;
+    
+    min-width: 80px;
     padding: var(--space-xs) var(--space-s);
     
     font-size: var(--font-size-sm);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
     
     border-radius: 8px;
     
     transition: 
       transform 0.2s var(--ease-bounce),
       box-shadow 0.2s var(--ease-out);
+    
+    /* Prevent text overflow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
   
   .station-badge {
-    color: lch(40 90 250);
+    color: lch(98 0 0);
     background: linear-gradient(
       135deg,
-      lch(90 60 250),
-      lch(95 40 250)
+      lch(60 90 200),
+      lch(70 80 210)
     );
-    box-shadow: 0 2px 8px lch(40 90 250 / 0.2);
+    box-shadow: 0 2px 8px lch(60 90 200 / 0.3);
   }
   
   .station-badge:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px lch(40 90 250 / 0.3);
+    box-shadow: 0 4px 12px lch(60 90 200 / 0.4);
   }
   
   .platform-badge {
-    color: lch(35 100 330);
+    color: lch(98 0 0);
     background: linear-gradient(
       135deg,
-      lch(90 80 330),
-      lch(95 60 330)
+      lch(65 100 330),
+      lch(75 90 340)
     );
-    box-shadow: 0 2px 8px lch(35 100 330 / 0.2);
+    box-shadow: 0 2px 8px lch(65 100 330 / 0.3);
   }
   
   .platform-badge:hover {
-    transform: scale(1.05) rotate(2deg);
-    box-shadow: 0 4px 12px lch(35 100 330 / 0.3);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px lch(65 100 330 / 0.4);
   }
   
   .time {
     font-family: 'SF Mono', 'Monaco', monospace;
     font-variant-numeric: tabular-nums;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
     color: var(--color-text);
     
     background: var(--color-surface);
@@ -898,6 +923,39 @@
     border-radius: 6px;
     
     box-shadow: var(--shadow-sm);
+    
+    /* Ensure consistent width */
+    display: inline-block;
+    min-width: 90px;
+    text-align: center;
+  }
+  
+  /* Status indicators */
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+  }
+  
+  .status-indicator::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-text-secondary);
+  }
+  
+  .status-indicator.upcoming::before {
+    background: var(--color-text-secondary);
+  }
+  
+  .status-indicator.current::before {
+    background: var(--color-success);
+    animation: pulse 2s infinite;
   }
 }
 
@@ -998,9 +1056,6 @@
     
     transition: width 0.5s var(--ease-out);
     animation: progressShine 2s linear infinite;
-    
-    /* For scroll-driven progress */
-    animation-timeline: scroll();
   }
   
   @keyframes progressShine {
@@ -1075,10 +1130,6 @@
     white-space: nowrap;
     border-width: 0;
   }
-  
-  .sr-only {
-    @extend .visually-hidden;
-  }
 }
 
 /* ================================================================
@@ -1087,8 +1138,8 @@
 
 @layer base {
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
   }
   
   ::-webkit-scrollbar-track {
@@ -1119,6 +1170,17 @@
    RESPONSIVE BREAKPOINTS
    ================================================================ */
 
+@media (width < 1200px) {
+  /* Adjust table for medium screens */
+  table {
+    font-size: var(--font-size-sm);
+  }
+  
+  th, td {
+    padding: var(--space-s) var(--space-xs);
+  }
+}
+
 @media (width < 768px) {
   .site-title {
     font-size: var(--font-size-2xl);
@@ -1133,8 +1195,18 @@
     padding: var(--space-l);
   }
   
+  /* Stack table vertically on mobile */
+  table {
+    font-size: var(--font-size-xs);
+  }
+  
   th, td {
-    padding: var(--space-s);
+    padding: var(--space-xs);
+  }
+  
+  .results-header {
+    padding: var(--space-m) var(--space-l);
+    font-size: var(--font-size-lg);
   }
 }
 
@@ -1156,6 +1228,10 @@
   
   button {
     display: none;
+  }
+  
+  table {
+    page-break-inside: avoid;
   }
 }
     </style>
@@ -5412,6 +5488,7 @@
 </body>
 
 </html>
+
 
 
 
