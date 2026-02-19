@@ -733,18 +733,114 @@ tbody tr:hover {
    =================================== */
 
 .footer {
-    text-align: center;
-    color: white;
     margin-top: 44px;
-    font-size: 1.05em;
-    opacity: 0.88;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
     animation: footerFade var(--duration-slow) var(--ease-out) 0.8s both;
 }
 
-@keyframes footerFade {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 0.88; transform: translateY(0); }
+.footer-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 36px;
+    flex-wrap: wrap;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1.5px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: white;
+}
+
+.footer-metro-icon {
+    font-size: 2.2em;
+    animation: trainGlide 4s var(--ease-in-out) infinite;
+}
+
+.footer-title {
+    font-size: 1em;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    color: white;
+}
+
+.footer-sub {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-top: 3px;
+    font-weight: 300;
+    color: white;
+}
+
+.footer-divider {
+    width: 1px;
+    height: 64px;
+    background: var(--glass-border);
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.footer-block {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.footer-label {
+    font-size: 0.75em;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 4px;
+}
+
+.footer-link {
+    font-size: 0.88em;
+    color: rgba(255,255,255,0.88);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--duration-fast) var(--ease-smooth),
+                transform var(--duration-fast) var(--ease-spring);
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: white;
+    transform: translateX(4px);
+}
+
+.footer-dev-name {
+    font-size: 1em;
+    font-weight: 800;
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.82em;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.4px;
+}
+
+@media (max-width: 768px) {
+    .footer-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 24px;
+        padding: 24px;
+    }
+
+    .footer-divider { width: 80%; height: 1px; }
 }
 
 /* ===================================
@@ -947,10 +1043,44 @@ tbody tr:hover {
             </div>
         </div>
 
-        <div class="footer">
-            <p>Real-time transit tracking system | Auto-updates every second</p>
+<div class="footer">
+    <div class="footer-inner">
+
+        <!-- Gujarat Metro Branding -->
+        <div class="footer-brand">
+            <span class="footer-metro-icon">🚇</span>
+            <div>
+                <div class="footer-title">Gujarat Metro Rail Corporation</div>
+                <div class="footer-sub">North-South Corridor · Phase 2</div>
+            </div>
         </div>
+
+        <div class="footer-divider"></div>
+
+        <!-- Customer Care -->
+        <div class="footer-block">
+            <div class="footer-label">Customer Care</div>
+            <a href="tel:079-2296-0123" class="footer-link">📞 079-2296-0123</a>
+            <a href="mailto:care@gujaratmetrorail.com" class="footer-link">✉️ care@gujaratmetrorail.com</a>
+            <a href="https://gujaratmetrorail.com" target="_blank" class="footer-link">🌐 gujaratmetrorail.com</a>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <!-- Developer Credit -->
+        <div class="footer-block">
+            <div class="footer-label">Developed by</div>
+            <div class="footer-dev-name">Harshil Patel</div>
+            <a href="https://github.com/xapoiyou" target="_blank" class="footer-link">⚡ GitHub</a>
+            <a href="mailto:hiraparaharshil@gmail.com" class="footer-link">✉️ hiraparaharshil@gmail.com</a>
+        </div>
+
     </div>
+
+    <div class="footer-bottom">
+        Real-time transit data · Auto-updates every second · © 2026 Gujarat Metro
+    </div>
+</div>
 
     <script>
         // Complete station mapping
@@ -5070,6 +5200,7 @@ tbody tr:hover {
 </body>
 
 </html>
+
 
 
 
