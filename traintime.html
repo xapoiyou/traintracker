@@ -1087,6 +1087,193 @@ tbody tr:hover {
 </div>
 
     <script>
+
+// Complete station network with platform-based routing
+const STATION_ROUTES = {
+    'APMC': {
+        'PL1': 'JVRJ',
+        'default': 'JVRJ'
+    },
+    'JVRJ': {
+        'PL1': 'RNMS',
+        'PL2': 'APMC',
+        'default': 'RNMS'
+    },
+    'RNMS': {
+        'PL1': 'SRYS',
+        'PL2': 'JVRJ',
+        'default': 'SRYS'
+    },
+    'SRYS': {
+        'PL1': 'PLDI',
+        'PL2': 'RNMS',
+        'default': 'PLDI'
+    },
+    'PLDI': {
+        'PL1': 'GRMS',
+        'PL2': 'SRYS',
+        'default': 'GRMS'
+    },
+    'GRMS': {
+        'PL1': 'OHCI',
+        'PL2': 'PLDI',
+        'default': 'OHCI'
+    },
+    'OHCI': {
+        'PL1': 'UPMS',
+        'PL2': 'GRMS',
+        'default': 'UPMS'
+    },
+    'UPMS': {
+        'PL1': 'VRMS',
+        'PL2': 'OHCI',
+        'default': 'VRMS'
+    },
+    'VRMS': {
+        'PL1': 'VDMS',
+        'PL2': 'UPMS',
+        'default': 'VDMS'
+    },
+    'VDMS': {
+        'PL1': 'RNIP',
+        'PL2': 'VRMS',
+        'default': 'RNIP'
+    },
+    'RNIP': {
+        'PL1': 'AEC',
+        'PL2': 'VDMS',
+        'default': 'AEC'
+    },
+    'AEC': {
+        'PL1': 'SMMS',
+        'PL2': 'RNIP',
+        'default': 'SMMS'
+    },
+    'SMMS': {
+        'PL1': 'MTRS',
+        'PL2': 'AEC',
+        'default': 'MTRS'
+    },
+    'MTRS': {
+        'PL1': 'KORD',
+        'PL2': 'SMMS',
+        'default': 'KORD'
+    },
+    'KORD': {
+        'PL1': 'VIKC',
+        'PL2': 'MTRS',
+        'default': 'VIKC'
+    },
+    'VIKC': {
+        'PL1': 'TAPC',
+        'PL2': 'KORD',
+        'default': 'TAPC'
+    },
+    'TAPC': {
+        'PL1': 'NAMC',
+        'PL2': 'VIKC',
+        'default': 'NAMC'
+    },
+    'NAMC': {
+        'PL1': 'KOBC',
+        'PL2': 'TAPC',
+        'default': 'KOBC'
+    },
+    'KOBC': {
+        'PL1': 'JUKB',
+        'PL2': 'NAMC',
+        'default': 'JUKB'
+    },
+    'JUKB': {
+        'PL1': 'KOBG',
+        'PL2': 'KOBC',
+        'default': 'KOBG'
+    },
+    'KOBG': {
+        'PL1': 'GNLU',
+        'PL2': 'JUKB',
+        'default': 'GNLU'
+    },
+    'GNLU': {
+        'PL1': 'RAYN', // Default to RAYN, but can also go to PDEU
+        'PL2': 'KOBG',
+        'default': 'RAYN',
+        'alternate': 'PDEU' // Can also go to PDEU from PL1
+    },
+    'PDEU': {
+        'PL1': 'GIFC',
+        'PL2': 'GIFC',
+        'default': 'GIFC'
+    },
+    'GIFC': {
+        'PL1': 'PDEU', // Dead end for PL1
+        'PL2': 'PDEU',
+        'default': 'PDEU'
+    },
+    'RAYN': {
+        'PL1': 'RADN',
+        'PL2': 'GNLU',
+        'default': 'RADN'
+    },
+    'RADN': {
+        'PL1': 'DHKU',
+        'PL2': 'RAYN',
+        'default': 'DHKU'
+    },
+    'DHKU': {
+        'PL1': 'INFC',
+        'PL2': 'RADN',
+        'default': 'INFC'
+    },
+    'INFC': {
+        'PL1': 'SEOA',
+        'PL2': 'DHKU',
+        'default': 'SEOA'
+    },
+    'SEOA': {
+        'PL1': 'SEAO',
+        'PL2': 'INFC',
+        'default': 'SEAO'
+    },
+    'SEAO': {
+        'PL1': 'SAVL',
+        'PL2': 'SEOA',
+        'default': 'SAVL'
+    },
+    'SAVL': {
+        'PL1': 'AKDM',
+        'PL2': 'SEAO',
+        'default': 'AKDM'
+    },
+    'AKDM': {
+        'PL1': 'JUSL',
+        'PL2': 'SAVL',
+        'default': 'JUSL'
+    },
+    'JUSL': {
+        'PL1': 'SEAF',
+        'PL2': 'AKDM',
+        'default': 'SEAF'
+    },
+    'SEAF': {
+        'PL1': 'SEBD',
+        'PL2': 'JUSL',
+        'default': 'SEBD'
+    },
+    'SEBD': {
+        'PL1': 'MAHM',
+        'PL2': 'SEAF',
+        'default': 'MAHM'
+    },
+    'MAHM': {
+        'PL1': 'SEBD', // Dead end for PL1
+        'PL2': 'SEBD', // Dead end for PL2
+        'PL3': 'SEBD',
+        'default': 'SEBD'
+    }
+};
+
+        
         // Complete station mapping
         const stationMap = {
             "APMC": "APMC",
@@ -5371,5 +5558,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
