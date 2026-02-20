@@ -4908,6 +4908,19 @@ tbody tr:hover {
             return h * 60 + m + s / 60;
         }
 
+        // Get parameter
+        const station = getQueryParam('station');
+        
+        // Set parameter
+        setQueryParam('station', 'OHCI');
+        
+        // Copy shareable link
+        copyShareableURL(); // Shows notification + copies
+        
+        // Clear all params
+        clearAllURLParams();
+        
+        
         // Get current time in minutes
         function getCurrentTimeInMinutes() {
             const now = new Date();
@@ -5007,7 +5020,7 @@ tbody tr:hover {
                             <h3>→ Next Stop</h3>
                             <div><strong>${stationMap[result.nextStop.station]}</strong></div>
                             <div style="color: #666; font-size: 0.9em; margin-top: 5px;">
-                                Arrives in ${timeUntilNext} minutes at ${result.nextStop.departure}
+                                Departs in ${timeUntilNext} minutes at ${result.nextStop.departure}
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" style="width: ${progressPercent.toFixed(1)}%"></div>
@@ -5185,6 +5198,7 @@ tbody tr:hover {
             `;
         }
 
+        
         // Auto-update every second
         setInterval(() => {
             updateClock();
@@ -5204,36 +5218,3 @@ tbody tr:hover {
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
