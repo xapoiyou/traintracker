@@ -4887,6 +4887,61 @@ tbody tr:hover {
 {journey: "J7", station: "APMC", platform: "RA2", departure: "22:56:55"}
         ];
 
+
+    function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+function setQueryParam(param, value) {
+    const url = new URL(window.location);
+    if (value) {
+        url.searchParams.set(param, value);
+    } else {
+        url.searchParams.delete(param);
+    }
+    window.history.pushState({}, '', url);
+}
+
+function showNotification(message, type = 'info') {
+    let notification = document.getElementById('notification');
+    
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.className = 'notification';
+        document.body.appendChild(notification);
+    }
+    
+    const colors = {
+        success: '#4facfe',
+        error: '#fa709a',
+        info: '#667eea'
+    };
+    
+    notification.style.background = colors[type] || colors.info;
+    notification.style.color = 'white';
+    notification.textContent = message;
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}
+
+async function copyShareableURL() {
+    const url = window.location.href;
+    try {
+        await navigator.clipboard.writeText(url);
+        showNotification('Link copied to clipboard!', 'success');
+    } catch (err) {
+        console.error('Copy failed:', err);
+        showNotification('Failed to copy link', 'error');
+    }
+}
+
+        
 // Update clock
         function updateClock() {
             const now = new Date();
@@ -4907,20 +4962,7 @@ tbody tr:hover {
             const [h, m, s] = timeStr.split(':').map(Number);
             return h * 60 + m + s / 60;
         }
-
-        // Get parameter
-        const station = getQueryParam('station');
-        
-        // Set parameter
-        setQueryParam('station', 'OHCI');
-        
-        // Copy shareable link
-        copyShareableURL(); // Shows notification + copies
-        
-        // Clear all params
-        clearAllURLParams();
-        
-        
+  
         // Get current time in minutes
         function getCurrentTimeInMinutes() {
             const now = new Date();
@@ -5198,6 +5240,117 @@ tbody tr:hover {
             `;
         }
 
+        unction initializeFromURL() {
+    const journeyParam = getQueryParam('journey');
+    const stationParam = getQueryParam('station');
+    const platformParam = getQueryParam('platform');
+    
+    const journeyInput = document.getElementById('journeyInput');
+    const stationInput = document.getElementById('stationInput');
+    const platformSelect = document.getElementById('platformSelect');
+    
+    if (journeyInput && journeyParam) {
+        journeyInput.value = journeyParam.toUpperCase();
+        setTimeout(() => searchJourney(journeyParam.toUpperCase()), 500);
+    }
+    
+    if (stationInput && stationParam) {
+        stationInput.value = stationParam.toUpperCase();
+        setTimeout(() => searchByStation(stationParam.toUpperCase()), 500);
+    }
+    
+    if (platformSelect && platformParam) {
+        platformSelect.value = platformParam;
+    }
+}
+
+function setupEventListeners() {
+    // Journey input
+    const journeyInput = document.getElementById('journeyInput');
+    if (journeyInput) {
+        journeyInput.addEventListener('input', (e) => {
+            const value = e.target.value.trim();
+            setQueryParam('journey', value);
+            if (value) {
+                setQueryParam('station', '');
+                const stationInput = document.getElementById('stationInput');
+                if (stationInput) stationInput.value = '';
+            }
+        });
+    }
+    
+    // Station input
+    const stationInput = document.getElementById('stationInput');
+    if (stationInput) {
+        stationInput.addEventListener('input', (e) => {
+            const value = e.target.value.trim();
+            setQueryParam('station', value);
+            if (value) {
+                setQueryParam('journey', '');
+                const journeyInput = document.getElementById('journeyInput');
+                if (journeyInput) journeyInput.value = '';
+            }
+        });
+    }
+    
+    // Platform select
+    const platformSelect = document.getElementById('platformSelect');
+    if (platformSelect) {
+        platformSelect.addEventListener('change', (e) => {
+            setQueryParam('platform', e.target.value);
+        });
+    }
+    
+    // Journey search button
+    const journeySearchBtn = document.getElementById('journeySearchBtn');
+    if (journeySearchBtn) {
+        journeySearchBtn.addEventListener('click', () => {
+            const journeyId = journeyInput?.value.trim().toUpperCase();
+            if (journeyId) {
+                searchJourney(journeyId);
+            } else {
+                showNotification('Please enter a journey ID', 'error');
+            }
+        });
+    }
+    
+    // Station search button
+    const stationSearchBtn = document.getElementById('stationSearchBtn');
+    if (stationSearchBtn) {
+        stationSearchBtn.addEventListener('click', () => {
+            const stationCode = stationInput?.value.trim().toUpperCase();
+            if (stationCode) {
+                searchByStation(stationCode);
+            } else {
+                showNotification('Please enter a station code', 'error');
+            }
+        });
+    }
+    
+    // Share button
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', copyShareableURL);
+    }
+}
+
+// ============================================================
+// Start Everything When DOM is Ready
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Transport Tracker Initialized');
+    
+    initializeFromURL();
+    setupEventListeners();
+    startAutoUpdates();
+    
+    console.log('📍 URL Parameters:', {
+        journey: getQueryParam('journey'),
+        station: getQueryParam('station'),
+        platform: getQueryParam('platform')
+    });
+});
         
         // Auto-update every second
         setInterval(() => {
@@ -5218,3 +5371,4 @@ tbody tr:hover {
 </body>
 
 </html>
+
