@@ -1092,184 +1092,148 @@ tbody tr:hover {
 const STATION_ROUTES = {
     'APMC': {
         'PL1': 'JVRJ',
-        'default': 'JVRJ'
+        'PL2': 'JVRJ'
     },
     'JVRJ': {
         'PL1': 'RNMS',
-        'PL2': 'APMC',
-        'default': 'RNMS'
+        'PL2': 'APMC'
     },
     'RNMS': {
         'PL1': 'SRYS',
-        'PL2': 'JVRJ',
-        'default': 'SRYS'
+        'PL2': 'JVRJ'
     },
     'SRYS': {
         'PL1': 'PLDI',
-        'PL2': 'RNMS',
-        'default': 'PLDI'
+        'PL2': 'RNMS'
     },
     'PLDI': {
         'PL1': 'GRMS',
-        'PL2': 'SRYS',
-        'default': 'GRMS'
+        'PL2': 'SRYS'
     },
     'GRMS': {
         'PL1': 'OHCI',
-        'PL2': 'PLDI',
-        'default': 'OHCI'
+        'PL2': 'PLDI'
     },
     'OHCI': {
         'PL1': 'UPMS',
-        'PL2': 'GRMS',
-        'default': 'UPMS'
+        'PL2': 'GRMS'
     },
     'UPMS': {
         'PL1': 'VRMS',
-        'PL2': 'OHCI',
-        'default': 'VRMS'
+        'PL2': 'OHCI'
     },
     'VRMS': {
         'PL1': 'VDMS',
-        'PL2': 'UPMS',
-        'default': 'VDMS'
+        'PL2': 'UPMS'
     },
     'VDMS': {
         'PL1': 'RNIP',
-        'PL2': 'VRMS',
-        'default': 'RNIP'
+        'PL2': 'VRMS'
     },
     'RNIP': {
         'PL1': 'AEC',
-        'PL2': 'VDMS',
-        'default': 'AEC'
+        'PL2': 'VDMS'
     },
     'AEC': {
         'PL1': 'SMMS',
-        'PL2': 'RNIP',
-        'default': 'SMMS'
+        'PL2': 'RNIP'
     },
     'SMMS': {
         'PL1': 'MTRS',
-        'PL2': 'AEC',
-        'default': 'MTRS'
+        'PL2': 'AEC'
     },
     'MTRS': {
         'PL1': 'KORD',
-        'PL2': 'SMMS',
-        'default': 'KORD'
+        'PL2': 'SMMS'
     },
     'KORD': {
         'PL1': 'VIKC',
-        'PL2': 'MTRS',
-        'default': 'VIKC'
+        'PL2': 'MTRS'
     },
     'VIKC': {
         'PL1': 'TAPC',
-        'PL2': 'KORD',
-        'default': 'TAPC'
+        'PL2': 'KORD'
     },
     'TAPC': {
         'PL1': 'NAMC',
-        'PL2': 'VIKC',
-        'default': 'NAMC'
+        'PL2': 'VIKC'
     },
     'NAMC': {
         'PL1': 'KOBC',
-        'PL2': 'TAPC',
-        'default': 'KOBC'
+        'PL2': 'TAPC'
     },
     'KOBC': {
         'PL1': 'JUKB',
-        'PL2': 'NAMC',
-        'default': 'JUKB'
+        'PL2': 'NAMC'
     },
     'JUKB': {
         'PL1': 'KOBG',
-        'PL2': 'KOBC',
-        'default': 'KOBG'
+        'PL2': 'KOBC'
     },
     'KOBG': {
         'PL1': 'GNLU',
-        'PL2': 'JUKB',
-        'default': 'GNLU'
+        'PL2': 'JUKB'
     },
     'GNLU': {
-        'PL1': 'RAYN', // Default to RAYN, but can also go to PDEU
-        'PL2': 'KOBG',
-        'default': 'RAYN',
-        'alternate': 'PDEU' // Can also go to PDEU from PL1
+        'PL1': 'RAYN',
+        'PL2': 'KOBG'
     },
     'PDEU': {
         'PL1': 'GIFC',
-        'PL2': 'GIFC',
-        'default': 'GIFC'
+        'PL2': 'GNLU'
     },
     'GIFC': {
         'PL1': 'PDEU', // Dead end for PL1
-        'PL2': 'PDEU',
-        'default': 'PDEU'
+        'PL2': 'PDEU'
     },
     'RAYN': {
         'PL1': 'RADN',
-        'PL2': 'GNLU',
-        'default': 'RADN'
+        'PL2': 'GNLU'
     },
     'RADN': {
         'PL1': 'DHKU',
-        'PL2': 'RAYN',
-        'default': 'DHKU'
+        'PL2': 'RAYN'
     },
     'DHKU': {
         'PL1': 'INFC',
-        'PL2': 'RADN',
-        'default': 'INFC'
+        'PL2': 'RADN'
     },
     'INFC': {
         'PL1': 'SEOA',
-        'PL2': 'DHKU',
-        'default': 'SEOA'
+        'PL2': 'DHKU'
     },
     'SEOA': {
         'PL1': 'SEAO',
-        'PL2': 'INFC',
-        'default': 'SEAO'
+        'PL2': 'INFC'
     },
     'SEAO': {
         'PL1': 'SAVL',
-        'PL2': 'SEOA',
-        'default': 'SAVL'
+        'PL2': 'SEOA'
     },
     'SAVL': {
         'PL1': 'AKDM',
-        'PL2': 'SEAO',
-        'default': 'AKDM'
+        'PL2': 'SEAO'
     },
     'AKDM': {
         'PL1': 'JUSL',
-        'PL2': 'SAVL',
-        'default': 'JUSL'
+        'PL2': 'SAVL'
     },
     'JUSL': {
         'PL1': 'SEAF',
-        'PL2': 'AKDM',
-        'default': 'SEAF'
+        'PL2': 'AKDM'
     },
     'SEAF': {
         'PL1': 'SEBD',
-        'PL2': 'JUSL',
-        'default': 'SEBD'
+        'PL2': 'JUSL'
     },
     'SEBD': {
         'PL1': 'MAHM',
-        'PL2': 'SEAF',
-        'default': 'MAHM'
+        'PL2': 'SEAF'
     },
     'MAHM': {
-        'PL1': 'SEBD', // Dead end for PL1
-        'PL2': 'SEBD', // Dead end for PL2
-        'PL3': 'SEBD',
-        'default': 'SEBD'
+        'PL1': 'SEBD', 
+        'PL2': 'SEBD', 
+        'PL3': 'SEBD'
     }
 };
 
@@ -1579,7 +1543,7 @@ const STATION_ROUTES = {
 {journey: "J2", station: "GRMS", platform: "PL2", departure: "07:34:20"},
 {journey: "J9", station: "GRMS", platform: "PL1", departure: "07:34:34"},
 {journey: "J5", station: "VDMS", platform: "PL1", departure: "07:34:52"},
-{journey: "J7", station: "GNLU", platform: "PL1", departure: "07:35:01"},
+{journey: "J7", station: "GNLU", platform: "PL1", departure: "07:35:01", nextStation: "PDEU"},
 {journey: "J4", station: "VIKC", platform: "PL1", departure: "07:35:18"},
 {journey: "J3", station: "JVRJ", platform: "PL1", departure: "07:35:53"},
 {journey: "J5", station: "RNIP", platform: "PL1", departure: "07:36:43"},
@@ -1766,7 +1730,7 @@ const STATION_ROUTES = {
 {journey: "J1", station: "DHKU", platform: "PL2", departure: "08:23:13"},
 {journey: "J7", station: "VDMS", platform: "PL2", departure: "08:23:15"},
 {journey: "J11", station: "SMMS", platform: "PL1", departure: "08:23:28"},
-{journey: "J3", station: "GNLU", platform: "PL1", departure: "08:23:31"},
+{journey: "J3", station: "GNLU", platform: "PL1", departure: "08:23:31", nextStation: "PDEU"},
 {journey: "J8", station: "SRYS", platform: "PL1", departure: "08:23:37"},
 {journey: "J5", station: "SRYS", platform: "PL2", departure: "08:23:38"},
 {journey: "J4", station: "MAHM", platform: "PL3", departure: "08:24:00"},
@@ -1889,7 +1853,7 @@ const STATION_ROUTES = {
 {journey: "J4", station: "RAYN", platform: "PL2", departure: "08:52:00"},
 {journey: "J8", station: "KORD", platform: "PL1", departure: "08:52:15"},
 {journey: "J3", station: "NAMC", platform: "PL2", departure: "08:52:23"},
-{journey: "J6", station: "GNLU", platform: "PL1", departure: "08:53:01"},
+{journey: "J6", station: "GNLU", platform: "PL1", departure: "08:53:01", nextStation: "PDEU"},
 {journey: "J11", station: "UPMS", platform: "PL2", departure: "08:53:07"},
 {journey: "J10", station: "RNMS", platform: "PL2", departure: "08:53:12"},
 {journey: "J9", station: "SEAF", platform: "PL2", departure: "08:53:35"},
@@ -2176,7 +2140,7 @@ const STATION_ROUTES = {
 {journey: "J8", station: "DHKU", platform: "PL2", departure: "10:00:13"},
 {journey: "J1", station: "VIKC", platform: "PL1", departure: "10:00:18"},
 {journey: "J5", station: "MAHM", platform: "PL3", departure: "10:01:00"},
-{journey: "J11", station: "GNLU", platform: "PL1", departure: "10:01:01"},
+{journey: "J11", station: "GNLU", platform: "PL1", departure: "10:01:01", nextStation: "PDEU"},
 {journey: "J7", station: "VDMS", platform: "PL2", departure: "10:01:08"},
 {journey: "J6", station: "JVRJ", platform: "PL1", departure: "10:01:17"},
 {journey: "J10", station: "SEOA", platform: "PL1", departure: "10:01:17"},
@@ -3636,7 +3600,7 @@ const STATION_ROUTES = {
 {journey: "J4", station: "VIKC", platform: "PL1", departure: "16:05:18"},
 {journey: "J8", station: "MTRS", platform: "PL2", departure: "16:05:34"},
 {journey: "J10", station: "MAHM", platform: "PL3", departure: "16:06:00"},
-{journey: "J7", station: "GNLU", platform: "PL1", departure: "16:06:01"},
+{journey: "J7", station: "GNLU", platform: "PL1", departure: "16:06:01", nextStation: "PDEU"},
 {journey: "J11", station: "VDMS", platform: "PL2", departure: "16:06:08"},
 {journey: "J1", station: "SEOA", platform: "PL1", departure: "16:06:17"},
 {journey: "J5", station: "RADN", platform: "PL2", departure: "16:07:09"},
@@ -3835,7 +3799,7 @@ const STATION_ROUTES = {
 {journey: "J8", station: "GRMS", platform: "PL1", departure: "16:52:14"},
 {journey: "J2", station: "KORD", platform: "PL1", departure: "16:52:15"},
 {journey: "J9", station: "INFC", platform: "PL1", departure: "16:52:59"},
-{journey: "J6", station: "GNLU", platform: "PL1", departure: "16:53:01"},
+{journey: "J6", station: "GNLU", platform: "PL1", departure: "16:53:01", nextStation: "PDEU"},
 {journey: "J7", station: "VDMS", platform: "PL2", departure: "16:53:08"},
 {journey: "J5", station: "PLDI", platform: "PL2", departure: "16:53:33"},
 {journey: "J3", station: "APMC", platform: "PL1", departure: "16:53:40"},
@@ -4137,7 +4101,7 @@ const STATION_ROUTES = {
 {journey: "J1", station: "GRMS", platform: "PL1", departure: "18:05:34"},
 {journey: "J5", station: "INFC", platform: "PL1", departure: "18:05:59"},
 {journey: "J9", station: "KORD", platform: "PL2", departure: "18:06:00"},
-{journey: "J7", station: "GNLU", platform: "PL1", departure: "18:06:01"},
+{journey: "J7", station: "GNLU", platform: "PL1", departure: "18:06:01", nextStation: "PDEU"},
 {journey: "J4", station: "PLDI", platform: "PL2", departure: "18:06:03"},
 {journey: "J3", station: "VDMS", platform: "PL2", departure: "18:06:08"},
 {journey: "J6", station: "APMC", platform: "PL1", departure: "18:06:50"},
@@ -4350,7 +4314,7 @@ const STATION_ROUTES = {
 {journey: "J1", station: "SEOA", platform: "PL1", departure: "18:56:17"},
 {journey: "J10", station: "MAHM", platform: "PL3", departure: "18:56:30"},
 {journey: "J7", station: "VDMS", platform: "PL2", departure: "18:56:48"},
-{journey: "J6", station: "GNLU", platform: "PL1", departure: "18:56:51"},
+{journey: "J6", station: "GNLU", platform: "PL1", departure: "18:56:51", nextStation: "PDEU"},
 {journey: "J11", station: "JVRJ", platform: "PL1", departure: "18:56:53"},
 {journey: "J2", station: "PLDI", platform: "PL2", departure: "18:57:03"},
 {journey: "J4", station: "TAPC", platform: "PL1", departure: "18:57:15"},
@@ -5074,6 +5038,26 @@ const STATION_ROUTES = {
 {journey: "J7", station: "APMC", platform: "RA2", departure: "22:56:55"}
         ];
 
+function getNextStation(journeyRecord) {
+    // Step 1: Check for manual override
+    if (journeyRecord.nextStation) {
+        return journeyRecord.nextStation;  // Use override
+    }
+    
+    // Step 2: Auto-calculate from platform
+    const route = STATION_ROUTES[journeyRecord.station];
+    const platform = journeyRecord.platform || 'PL1';
+    return route[platform] || route.default;
+}
+
+/**
+ * Get station full name
+ * @param {string} stationCode - Station code
+ * @returns {string} Full station name
+ */
+function getStationName(code) {
+    return STATION_NAMES[code] || code;
+}
 
     function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -5558,6 +5542,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
 
