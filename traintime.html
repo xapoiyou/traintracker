@@ -5290,26 +5290,6 @@ async function copyShareableURL() {
                 }
             }
             
-            // Generate table rows
-            stopsToShow.forEach(({stop, index, isCurrent}) => {
-                const statusText = isCurrent ? 'Current' : 'Upcoming';
-                const statusIcon = isCurrent ? '🟢' : '○';
-                const nextStopName = index < result.allStops.length - 1 
-                    ? stationMap[result.allStops[index + 1].station] 
-                    : '-';
-                
-                tableHTML += `
-                    <tr class="${isCurrent ? 'active-row' : ''}">
-                        <td class="journey-id">${stop.journey}</td>
-                        <td>${statusIcon} ${statusText}</td>
-                        <td><span class="station-badge">${stationMap[stop.station]}</span></td>
-                        <td><span class="platform-badge">${stop.platform}</span></td>
-                        <td class="time">${stop.departure}</td>
-                        <td>${nextStopName}</td>
-                    </tr>
-                `;
-            });
-            
             if (tableHTML === '') {
                 tableHTML = `
                     <tr class="empty-state">
@@ -5383,7 +5363,11 @@ async function copyShareableURL() {
                     if (isCurrent || isUpcoming) {
                         const journey = journeyData.filter(j => j.journey === d.journey);
                         const nextIdx = journey.findIndex(j => j.station === stationCode) + 1;
-                        const nextStop = nextIdx < journey.length ? stationMap[journey[nextIdx].station] : 'Final Stop';
+                        const nextStop = if (condition === true) {
+    nextStop = getnextstation(d);
+} else {
+    nextStop = 'GSPD';
+};
 
                         const status = isCurrent ? 'Current' : 'Upcoming';
                         const statusIcon = isCurrent ? '🟢' : '○';
@@ -5542,6 +5526,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
 
