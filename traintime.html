@@ -1175,8 +1175,8 @@ const STATION_ROUTES = {
         'PL2': 'JUKB'
     },
     'GNLU': {
-        'PL1': 'RAYN',
-        'PL2': 'KOBG'
+        'PL2': 'KOBG',
+        'PL1': 'RAYN'
     },
     'PDEU': {
         'PL1': 'GIFC',
@@ -5363,11 +5363,9 @@ async function copyShareableURL() {
                     if (isCurrent || isUpcoming) {
                         const journey = journeyData.filter(j => j.journey === d.journey);
                         const nextIdx = journey.findIndex(j => j.station === stationCode) + 1;
-                        const nextStop = if (condition === true) {
-    nextStop = getnextstation(d);
-} else {
-    nextStop = 'GSPD';
-};
+                         const nextStop = index < result.allStops.length - 1 
+                    ? stationMap[result.allStops[index + 1].station] 
+                    : 'GSPD';;
 
                         const status = isCurrent ? 'Current' : 'Upcoming';
                         const statusIcon = isCurrent ? '🟢' : '○';
@@ -5379,7 +5377,7 @@ async function copyShareableURL() {
                                 <td><span class="station-badge">${stationMap[d.station]}</span></td>
                                 <td><span class="platform-badge">${d.platform}</span></td>
                                 <td><span class="time">${d.departure}</span></td>
-                                <td>${nextStop}</td>
+                                <td>${journeyRecord.nextStation}</td>
                             </tr>
                         `;
                     }
@@ -5526,6 +5524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
 
