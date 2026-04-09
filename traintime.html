@@ -928,8 +928,9 @@ tbody tr:hover {
                 
                 <div class="filter-group">
                     <label for="journeyInput">Journey ID</label>
-                    <input type="text" id="journeyInput" list="journeyOptions" placeholder="e.g., 01, 02, 03...11">
-                    <datalist id="journeyOptions"></datalist>
+                    <select id="journeyInput">
+    <option value="">-- Select Journey --</option>
+</select>
                 </div>
 
                 <button onclick="searchJourney()">Track Journey</button>
@@ -4922,18 +4923,17 @@ const STATION_ROUTES = {
  */
 
         function updateJourneyDropdown() {
-    const datalist = document.getElementById('journeyOptions');
-    if (!datalist) return;
+    const select = document.getElementById('journeyInput');
+    if (!select) return;
 
-    // Get all unique journey IDs
+    const currentValue = select.value; // preserve selection
     const journeyIds = [...new Set(journeyData.map(d => d.journey))].sort();
 
-    datalist.innerHTML = ''; // Clear existing options
+    select.innerHTML = '<option value="">-- Select Journey --</option>';
 
     journeyIds.forEach(journeyId => {
         const result = findCurrentLocation(journeyId);
 
-        // Get destination from journey data (any record for this journey)
         const journeyRecords = journeyData.filter(d => d.journey === journeyId);
         const destCode = journeyRecords.find(d => d.destination)?.destination;
         const destName = destCode ? getStationName(destCode) : '?';
@@ -4942,15 +4942,16 @@ const STATION_ROUTES = {
         if (result.currentStop) {
             currentStationName = getStationName(result.currentStop.station);
         } else if (result.allStops.length > 0) {
-            // Not started yet — show first station
             currentStationName = getStationName(result.allStops[0].station) + ' (soon)';
         }
 
         const option = document.createElement('option');
         option.value = journeyId;
-        option.label = `${journeyId}  |  ${currentStationName}  →  ${destName}`;
-        datalist.appendChild(option);
+        option.textContent = `${journeyId}  |  ${currentStationName}  →  ${destName}`;
+        select.appendChild(option);
     });
+
+    select.value = currentValue; // restore
 }
         
 function getNextStation(journeyRecord) {
@@ -5501,7 +5502,7 @@ function setupEventListeners() {
     // Journey input
     const journeyInput = document.getElementById('journeyInput');
     if (journeyInput) {
-        journeyInput.addEventListener('input', (e) => {
+        journeyInput.addEventListener('change', (e) => {
             const value = e.target.value.trim();
             setQueryParam('journey', value);
             if (value) {
