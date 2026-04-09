@@ -4926,14 +4926,24 @@ const STATION_ROUTES = {
     const select = document.getElementById('journeyInput');
     if (!select) return;
 
-    const currentValue = select.value; // preserve selection
     const journeyIds = [...new Set(journeyData.map(d => d.journey))].sort();
 
-    select.innerHTML = '<option value="">-- Select Journey --</option>';
+    // First run: build the select from scratch
+    if (select.options.length <= 1) {
+        select.innerHTML = '<option value="">-- Select Journey --</option>';
+        journeyIds.forEach(journeyId => {
+            const option = document.createElement('option');
+            option.value = journeyId;
+            select.appendChild(option);
+        });
+    }
 
-    journeyIds.forEach(journeyId => {
+    // Every run: only update the text if it changed (no DOM rebuild = no blink)
+    journeyIds.forEach((journeyId, i) => {
+        const option = select.options[i + 1]; // +1 to skip placeholder
+        if (!option) return;
+
         const result = findCurrentLocation(journeyId);
-
         const journeyRecords = journeyData.filter(d => d.journey === journeyId);
         const destCode = journeyRecords.find(d => d.destination)?.destination;
         const destName = destCode ? getStationName(destCode) : '?';
@@ -4945,13 +4955,13 @@ const STATION_ROUTES = {
             currentStationName = getStationName(result.allStops[0].station) + ' (soon)';
         }
 
-        const option = document.createElement('option');
-        option.value = journeyId;
-        option.textContent = `${journeyId}  |  ${currentStationName}  →  ${destName}`;
-        select.appendChild(option);
-    });
+        const newText = `${journeyId}  |  ${currentStationName}  →  ${destName}`;
 
-    select.value = currentValue; // restore
+        // Only touch the DOM if the label actually changed
+        if (option.textContent !== newText) {
+            option.textContent = newText;
+        }
+    });
 }
         
 function getNextStation(journeyRecord) {
