@@ -1,4 +1,4 @@
-ra<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -4966,7 +4966,7 @@ function updateJourneyDropdown() {
             currentStationName = getStationName(result.allStops[0].station) + ' (soon)';
         }
 
-        const newText = `${journeyId}  |  ${currentStationName}  →  ${destName}`;
+        const newText = `${currentStationName}  →  ${destName}`;
 
         if (option.textContent !== newText) {
             option.textContent = newText;
@@ -5195,7 +5195,7 @@ function updateJourneyStatus(journeyId, result) {
         statusElement.innerHTML = `
             <div class="status-box" style="border-left-color: #f44336; background: #ffebee;">
                 <div class="status-label" style="color: #f44336;">❌ Journey Not Found</div>
-                <div class="status-value">Select Your Journey to see live times${journeyId}</div>
+                <div class="status-value">SELECT YOUR JOURNEY TO SEE LIVE TIMES${journeyId}</div>
             </div>
         `;
         return;
