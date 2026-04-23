@@ -4988,7 +4988,7 @@ function populateJourneyDropdown() {
         if (!destCode || destCode === 'GSPD') return;
 
         const currentStationName = getStationName(currentStop.station);
-        const destName = getStationName(destCode);
+        const destName = currentStop?.destination;
 
         const stationNum  = STATION_NUMBERS[currentStop.station] || 0;
         const platformOff = PLATFORM_OFFSETS[currentStop.platform] || 0;
@@ -5362,7 +5362,7 @@ function updateStationTable(stationCode, filtered, currentTime) {
                 const nextStationName = getStationName(nextStationCode);
 
                 // ✅ Terminus traced via STATION_ROUTES — no d.destination needed
-                const destCode = findJourneyTerminus(d.journey);
+                const destCode = activeStop?.destination;
                 const destName = destCode ? getStationName(destCode) : '?';
 
                 html += `
