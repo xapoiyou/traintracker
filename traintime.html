@@ -4935,8 +4935,11 @@ const PLATFORM_OFFSETS = { 'PL1': 0, 'PL2': 1, 'PL3': 2 };
  */
 
 function populateJourneyDropdown() {
-    const datalist = document.getElementById('journeyOptions');
-    if (!datalist) return;
+    const select = document.getElementById('journeyInput');
+    if (!select) return;
+
+    // Save current selection
+    const currentVal = select.value;
 
     const journeyIds = [...new Set(journeyData.map(d => d.journey))];
     const options = [];
@@ -4948,38 +4951,39 @@ function populateJourneyDropdown() {
         const currentStop = result.currentStop;
         const allStops = result.allStops;
 
-        // Last stop = destination
         const destStop = allStops[allStops.length - 1];
         const destCode = destStop ? destStop.station : null;
 
-        // Hide if no dest or dest is GSPD
         if (!destCode || destCode === 'GSPD') return;
 
         const currentStationName = getStationName(currentStop.station);
         const destName = getStationName(destCode);
 
-        // Sort key calculation
-        const stationNum    = STATION_NUMBERS[currentStop.station] || 0;
-        const platformOff   = PLATFORM_OFFSETS[currentStop.platform] || 0;
-        const sameBonus     = currentStop.station === destCode ? 75 : 0;
-        const sortKey       = stationNum + platformOff + sameBonus;
+        const stationNum  = STATION_NUMBERS[currentStop.station] || 0;
+        const platformOff = PLATFORM_OFFSETS[currentStop.platform] || 0;
+        const sameBonus   = currentStop.station === destCode ? 75 : 0;
+        const sortKey     = stationNum + platformOff + sameBonus;
 
-        const newText = `${currentStationName}  →  ${destName}`;
-
-        options.push({ journeyId, text: newText, sortKey });
+        options.push({
+            journeyId,
+            text: `${currentStationName}  →  ${destName}`,
+            sortKey
+        });
     });
 
-    // Sort ascending by key (1 → 100)
     options.sort((a, b) => a.sortKey - b.sortKey);
 
-    // Rebuild datalist
-    datalist.innerHTML = '';
+    // Rebuild select — keep placeholder
+    select.innerHTML = '<option value="">Select Journey</option>';
     options.forEach(opt => {
         const el = document.createElement('option');
         el.value = opt.journeyId;
-        el.label = opt.text;         // shown in dropdown
-        datalist.appendChild(el);
+        el.textContent = opt.text;
+        select.appendChild(el);
     });
+
+    // Restore selection if still valid
+    if (currentVal) select.value = currentVal;
 }
         
 function updateJourneyDropdown() {
@@ -5237,9 +5241,9 @@ function searchJourney() {
     document.getElementById('col-journey').style.display = 'none';
     document.getElementById('col-station').style.display = '';
     const journeyInput = document.getElementById('journeyInput');
-    if (!journeyInput) return;
+    if (!journeyInput || !journeyInput.value) return;
     
-    const journeyId = journeyInput.value.trim().toUpperCase();
+    const journeyId = journeyInput.value;
     const result = findCurrentLocation(journeyId);
     updateJourneyStatus(journeyId, result);
     updateJourneyTable(result);
@@ -5577,18 +5581,19 @@ function initializeFromURL() {
  */
 function setupEventListeners() {
     // Journey input
-    const journeyInput = document.getElementById('journeyInput');
-    if (journeyInput) {
-        journeyInput.addEventListener('change', (e) => {
-            const value = e.target.value.trim();
-            setQueryParam('journey', value);
-            if (value) {
-                setQueryParam('station', '');
-                const stationInput = document.getElementById('stationInput');
-                if (stationInput) stationInput.value = '';
-            }
-        });
-    }
+const journeyInput = document.getElementById('journeyInput');
+if (journeyInput) {
+    journeyInput.addEventListener('change', (e) => {  // 'change' not 'input'
+        const value = e.target.value.trim();
+        setQueryParam('journey', value);
+        if (value) {
+            searchJourney();
+            setQueryParam('station', '');
+            const stationInput = document.getElementById('stationInput');
+            if (stationInput) stationInput.value = '';
+        }
+    });
+}
     
     // Station input
     const stationInput = document.getElementById('stationInput');
