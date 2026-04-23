@@ -5321,7 +5321,7 @@ function updateJourneyTable(result) {
         
         tableHTML += `
             <tr ${isCurrent ? 'class="active-row"' : ''}>
-                 <td style="display:none"><span class="journey-id">${getStationName(d.destination)}</span></td>
+                 <td style="display:none"><span class="journey-id">${getStationName(stop.journey)}</span></td>
                 <td><span class="station-badge">${currentStationName}</span></td>
                 <td><span class="platform-badge">${stop.platform}</span></td>
                 <td><span class="time">${stop.departure.slice(0, 5)}</span></td>
