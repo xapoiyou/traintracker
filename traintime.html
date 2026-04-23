@@ -1155,6 +1155,19 @@ const STATION_ROUTES = {
             "GSPD": "Gyaspur Depot"
         };
 
+            const STATION_NUMBERS = {
+    'APMC':1, 'JVRJ':3, 'RNMS':5, 'SRYS':7, 'PLDI':9,
+    'GRMS':11, 'OHCI':13, 'UPMS':15, 'VRMS':17, 'VDMS':19,
+    'RNIP':21, 'AEC':23, 'SMMS':25, 'MTRS':27, 'KORD':29,
+    'VIKC':31, 'TAPC':33, 'NAMC':35, 'KOBC':37, 'JUKB':39,
+    'KOBG':41, 'GNLU':43, 'PDEU':45, 'GIFC':47, 'RAYN':49,
+    'RADN':51, 'DHKU':53, 'INFC':55, 'SEOA':57, 'SEAO':59,
+    'SAVL':61, 'AKDM':63, 'JUSL':65, 'SEAF':67, 'SEBD':69,
+    'MAHM':71
+};
+
+const PLATFORM_OFFSETS = { 'PL1': 0, 'PL2': 1, 'PL3': 2 };
+
         // Sample journey data
         const journeyData = [
 {journey: "J1", station: "APMC", platform: "RA2", departure: "05:00:13", destination: "APMC"},
@@ -4921,6 +4934,54 @@ const STATION_ROUTES = {
  * @returns {string} Next station code
  */
 
+function populateJourneyDropdown() {
+    const datalist = document.getElementById('journeyOptions');
+    if (!datalist) return;
+
+    const journeyIds = [...new Set(journeyData.map(d => d.journey))];
+    const options = [];
+
+    journeyIds.forEach(journeyId => {
+        const result = findCurrentLocation(journeyId);
+        if (!result.currentStop) return;
+
+        const currentStop = result.currentStop;
+        const allStops = result.allStops;
+
+        // Last stop = destination
+        const destStop = allStops[allStops.length - 1];
+        const destCode = destStop ? destStop.station : null;
+
+        // Hide if no dest or dest is GSPD
+        if (!destCode || destCode === 'GSPD') return;
+
+        const currentStationName = getStationName(currentStop.station);
+        const destName = getStationName(destCode);
+
+        // Sort key calculation
+        const stationNum    = STATION_NUMBERS[currentStop.station] || 0;
+        const platformOff   = PLATFORM_OFFSETS[currentStop.platform] || 0;
+        const sameBonus     = currentStop.station === destCode ? 75 : 0;
+        const sortKey       = stationNum + platformOff + sameBonus;
+
+        const newText = `${currentStationName}  →  ${destName}`;
+
+        options.push({ journeyId, text: newText, sortKey });
+    });
+
+    // Sort ascending by key (1 → 100)
+    options.sort((a, b) => a.sortKey - b.sortKey);
+
+    // Rebuild datalist
+    datalist.innerHTML = '';
+    options.forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt.journeyId;
+        el.label = opt.text;         // shown in dropdown
+        datalist.appendChild(el);
+    });
+}
+        
 function updateJourneyDropdown() {
     const select = document.getElementById('journeyInput');
     if (!select) return;
@@ -5197,7 +5258,7 @@ function updateJourneyStatus(journeyId, result) {
         statusElement.innerHTML = `
             <div class="status-box" style="border-left-color: #f44336; background: #ffebee;">
                 <div class="status-label" style="color: #f44336;">❌ Journey Not Found</div>
-                <div class="status-value">SELECT YOUR JOURNEY TO SEE LIVE TIMES${journeyId}</div>
+                <div class="status-value">Please tap a route to see live departure times.${journeyId}</div>
             </div>
         `;
         return;
@@ -5559,11 +5620,13 @@ function setupEventListeners() {
 function startAutoUpdates() {
     // Update immediately
     updateClock();
+    populateJourneyDropdown();
     
     // Then update every second
     setInterval(() => {
         updateClock();
          updateJourneyDropdown();
+        populateJourneyDropdown();
         
         const journeyInput = document.getElementById('journeyInput');
         const stationInput = document.getElementById('stationInput');
