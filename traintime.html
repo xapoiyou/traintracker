@@ -1010,8 +1010,8 @@ tbody tr:hover {
                 <table>
                     <thead>
                         <tr>
-                            <th>Journey</th>
-                            <th>Current Station</th>
+                            <th id="col-journey">Journey</th>
+                            <th id="col-station">Current Station</th>
                             <th>Platform</th>
                             <th>Departure Time</th>
                             <th>Next Stop</th>
@@ -5173,6 +5173,8 @@ function findCurrentLocation(journeyId) {
  * Search and display journey information
  */
 function searchJourney() {
+    document.getElementById('col-journey').style.display = 'none';
+    document.getElementById('col-station').style.display = '';
     const journeyInput = document.getElementById('journeyInput');
     if (!journeyInput) return;
     
@@ -5319,7 +5321,7 @@ function updateJourneyTable(result) {
         
         tableHTML += `
             <tr ${isCurrent ? 'class="active-row"' : ''}>
-                <td><span class="journey-id">${getStationName(stop.destination)}</span></td>
+                 <td style="display:none"><span class="journey-id">${stop.journey}</span></td>
                 <td><span class="station-badge">${currentStationName}</span></td>
                 <td><span class="platform-badge">${stop.platform}</span></td>
                 <td><span class="time">${stop.departure.slice(0, 5)}</span></td>
@@ -5350,6 +5352,8 @@ function updateJourneyTable(result) {
  * Search and display station information
  */
 function searchByStation() {
+    document.getElementById('col-journey').style.display = '';
+    document.getElementById('col-station').style.display = 'none';
     const stationInput = document.getElementById('stationInput');
     const platformFilter = document.getElementById('platformFilter');
     
@@ -5456,8 +5460,8 @@ function updateStationTable(stationCode, filtered, currentTime) {
 
                 html += `
                     <tr ${isCurrent ? 'class="active-row"' : ''}>
-                        <td><span class="journey-id">${getStationName(d.destination)}</span></td>
-                        <td><span class="station-badge">${currentStationName}</span></td>
+                        <td><span class="journey-id">${d.journey}</span></td>
+                        <td style="display:none"><span class="station-badge">${currentStationName}</span></td>
                         <td><span class="platform-badge">${d.platform}</span></td>
                         <td><span class="time">${d.departure.slice(0, 5)}</span></td>
                         <td><span class="station-badge">${nextStationName}</span></td>
