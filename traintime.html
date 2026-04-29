@@ -4937,12 +4937,16 @@ const DESTINATION_COLORS = {
 
 let _dropdownCache = ''; // tracks last rendered state
 
-function getJourneyDestination(journeyId) {
-    // Find the last record for this journey that has a destination field
+    function getJourneyDestination(journeyId) {
+    // Priority 1: use destination field if any record has it
     const withDest = journeyData
         .filter(d => d.journey === journeyId && d.destination)
         .sort((a, b) => timeToSeconds(a.departure) - timeToSeconds(b.departure));
-    return withDest.length ? withDest[withDest.length - 1].destination : null;
+
+    if (withDest.length) return withDest[withDest.length - 1].destination;
+
+    // Priority 2: trace route forward from last known stop
+    return findJourneyTerminus(journeyId);
 }
 
 function populateJourneyDropdown() {
@@ -4956,8 +4960,9 @@ function populateJourneyDropdown() {
 journeyIds.forEach(journeyId => {
     const result = findCurrentLocation(journeyId);
 
-    // Use currentStop if active, else first stop if not yet started
-    const activeStop = result.currentStop || (result.allStops.length ? result.allStops[0] : null);
+    // Don't skip — use first stop if journey hasn't started yet
+    const activeStop = result.currentStop 
+        || (result.allStops.length ? result.allStops[0] : null);
     if (!activeStop) return;
 
     const destCode = getJourneyDestination(journeyId);
@@ -4971,12 +4976,7 @@ journeyIds.forEach(journeyId => {
     const sameBonus   = activeStop.station === destCode ? 75 : 0;
     const sortKey     = stationNum + platformOff + sameBonus;
 
-    options.push({
-        journeyId,
-        text: `${currentStationName}  →  ${destName}`,
-        sortKey,
-        destCode
-    });
+    options.push({ journeyId, text: `${currentStationName}  →  ${destName}`, sortKey, destCode });
 });
     options.sort((a, b) => a.sortKey - b.sortKey);
 
