@@ -4938,14 +4938,19 @@ const DESTINATION_COLORS = {
 let _dropdownCache = ''; // tracks last rendered state
 
     function getJourneyDestination(journeyId) {
-    // Priority 1: use destination field if any record has it
-    const withDest = journeyData
-        .filter(d => d.journey === journeyId && d.destination)
-        .sort((a, b) => timeToSeconds(a.departure) - timeToSeconds(b.departure));
+    // Check ALL records with destination field - prefer the one with RA2 platform
+    // as those are your journey header records
+    const withDest = journeyData.filter(d => d.journey === journeyId && d.destination);
 
-    if (withDest.length) return withDest[withDest.length - 1].destination;
+    if (withDest.length) {
+        // Prefer RA2 record (journey header) if it exists
+        const ra2 = withDest.find(d => d.platform === 'RA2');
+        if (ra2) return ra2.destination;
+        // Otherwise use last record with destination
+        return withDest[withDest.length - 1].destination;
+    }
 
-    // Priority 2: trace route forward from last known stop
+    // Fallback: trace route forward
     return findJourneyTerminus(journeyId);
 }
 
@@ -4957,35 +4962,40 @@ function populateJourneyDropdown() {
     const journeyIds = [...new Set(journeyData.map(d => d.journey))];
     const options = [];
 
-journeyIds.forEach(journeyId => {
-    const result = findCurrentLocation(journeyId);
+    journeyIds.forEach(journeyId => {
+        const result = findCurrentLocation(journeyId);
 
-    // Don't skip — use first stop if journey hasn't started yet
-    const activeStop = result.currentStop 
-        || (result.allStops.length ? result.allStops[0] : null);
-    if (!activeStop) return;
+        // Use currentStop if active, fallback to first stop if not yet started,
+        // fallback to last stop if completed
+        const activeStop = result.currentStop
+            || (result.allStops.length ? result.allStops[0] : null);
+        if (!activeStop) return;
 
-    const destCode = getJourneyDestination(journeyId);
-    if (!destCode || destCode === 'GSPD') return;
+        // Get destination: explicit field first, then trace route
+        const destCode = getJourneyDestination(journeyId);
 
-    const currentStationName = getStationName(activeStop.station);
-    const destName = getStationName(destCode);
+        // Only hide if destination is explicitly the depot
+        if (!destCode) return;
+        if (destCode === 'GSPD') return;
 
-    const stationNum  = STATION_NUMBERS[activeStop.station] || 0;
-    const platformOff = PLATFORM_OFFSETS[activeStop.platform] || 0;
-    const sameBonus   = activeStop.station === destCode ? 75 : 0;
-    const sortKey     = stationNum + platformOff + sameBonus;
+        const currentStationName = getStationName(activeStop.station);
+        const destName = getStationName(destCode);
 
-    options.push({ journeyId, text: `${currentStationName}  →  ${destName}`, sortKey, destCode });
-});
+        const stationNum  = STATION_NUMBERS[activeStop.station] || 0;
+        const platformOff = PLATFORM_OFFSETS[activeStop.platform] || 0;
+        const sameBonus   = activeStop.station === destCode ? 75 : 0;
+        const sortKey     = stationNum + platformOff + sameBonus;
+
+        options.push({ journeyId, text: `${currentStationName}  →  ${destName}`, sortKey, destCode });
+    });
+
     options.sort((a, b) => a.sortKey - b.sortKey);
 
-    // ── No-blink: only rebuild DOM if something actually changed ──
+    // No-blink: only rebuild if content actually changed
     const newState = options.map(o => `${o.journeyId}:${o.text}`).join('|');
-    if (newState === _dropdownCache) return; // nothing changed, skip
+    if (newState === _dropdownCache) return;
     _dropdownCache = newState;
 
-    // Rebuild select
     select.innerHTML = '<option value="">Select Journey</option>';
     options.forEach(opt => {
         const el = document.createElement('option');
@@ -4996,7 +5006,6 @@ journeyIds.forEach(journeyId => {
         select.appendChild(el);
     });
 
-    // Restore previous selection if still valid
     if (savedVal) select.value = savedVal;
 }
 
