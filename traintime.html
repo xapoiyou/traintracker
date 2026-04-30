@@ -4979,14 +4979,14 @@ function populateJourneyDropdown() {
         if (destCode === 'GSPD') return;
 
         const currentStationName = getStationName(activeStop.station);
-        const destName = d.destination ? getStationName(d.destination) : '?';
-
+        const destName = getStationName(destCode);
+    
         const stationNum  = STATION_NUMBERS[activeStop.station] || 0;
         const platformOff = PLATFORM_OFFSETS[activeStop.platform] || 0;
         const sameBonus   = activeStop.station === destCode ? 75 : 0;
         const sortKey     = stationNum + platformOff + sameBonus;
 
-        options.push({ journeyId, text: `${currentStationName}  →  ${getStationName(d.destination)}`, sortKey, destCode });
+        options.push({ journeyId, text: `${currentStationName}  →  ${getStationName(activeStop.destination || destCode)}`, sortKey, destCode });
     });
 
     options.sort((a, b) => a.sortKey - b.sortKey);
