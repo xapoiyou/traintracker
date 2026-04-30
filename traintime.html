@@ -4986,7 +4986,7 @@ function populateJourneyDropdown() {
         const sameBonus   = activeStop.station === destCode ? 75 : 0;
         const sortKey     = stationNum + platformOff + sameBonus;
 
-        options.push({ journeyId, text: `${currentStationName}  →  ${destName}`, sortKey, destCode });
+        options.push({ journeyId, text: `${currentStationName}  →  ${getStationName(d.destination)}`, sortKey, destCode });
     });
 
     options.sort((a, b) => a.sortKey - b.sortKey);
