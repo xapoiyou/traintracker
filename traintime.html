@@ -5251,13 +5251,12 @@ function updateJourneyTable(result) {
                 <td><span class="station-badge">${currentStationName}</span></td>
                 <td><span class="platform-badge">${stop.platform}</span></td>
                 <td><span class="time">${stop.departure.slice(0, 5)}</span></td>
-                <td><span class="station-badge">${nextStationName}</span></td>
             </tr>`;
     });
 
     tbody.innerHTML = tableHTML || `
         <tr class="empty-state">
-            <td colspan="5"><h3>Journey Completed</h3><p>All stops have been passed</p></td>
+            <td colspan="4"><h3>Journey Completed</h3><p>All stops have been passed</p></td>
         </tr>`;
 }
 
