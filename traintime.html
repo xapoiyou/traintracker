@@ -944,7 +944,7 @@ tbody tr:hover {
                 
                 <div class="filter-group">
                     <label for="stationInput">Station Code</label>
-        <select id="stationInput">
+        < id="stationInput">
             <option value="">Current Station</option>
             <option value="APMC">APMC</option>
             <option value="JVRJ">Jivraj Park</option>
@@ -952,7 +952,7 @@ tbody tr:hover {
             <option value="SRYS">Sreyas</option>
             <option value="PLDI">Paldi</option>
             <option value="GRMS">Gandhigram</option>
-            <option value="OHCI" selected>Old High Court</option>
+            <option value="OHCI" ed>Old High Court</option>
             <option value="UPMS">Ushmanpura</option>
             <option value="VRMS">Vijaynagar</option>
             <option value="VDMS">Vadaj</option>
@@ -982,17 +982,17 @@ tbody tr:hover {
             <option value="SEAF">Sector-16</option>
             <option value="SEBD">Sector-24</option>
             <option value="MAHM">Mahatma Mandir</option>
-        </select>
+        </>
                 </div>
 
                 <div class="filter-group">
                     <label for="platformFilter">Platform</label>
-                    <select id="platformFilter">
+                    < id="platformFilter">
                         <option value="">All Platforms</option>
                         <option value="PL1">PL1</option>
                         <option value="PL2">PL2</option>
                         <option value="PL3">PL3</option>
-                    </select>
+                    </>
                 </div>
 
                 <button onclick="searchByStation()">Find Journeys</button>
@@ -4955,10 +4955,10 @@ let _dropdownCache = ''; // tracks last rendered state
 }
 
 function populateJourneyDropdown() {
-    const select = document.getElementById('journeyInput');
-    if (!select) return;
+    const  = document.getElementById('journeyInput');
+    if (!) return;
 
-    const savedVal = select.value;
+    const savedVal = .value;
     const journeyIds = [...new Set(journeyData.map(d => d.journey))];
     const options = [];
 
@@ -4996,7 +4996,7 @@ function populateJourneyDropdown() {
     if (newState === _dropdownCache) return;
     _dropdownCache = newState;
 
-    select.innerHTML = '<option value="">Select Journey</option>';
+    select.innerHTML = '<option value="">Current → Destination</option>';
     options.forEach(opt => {
         const el = document.createElement('option');
         el.value = opt.journeyId;
