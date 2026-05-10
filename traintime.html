@@ -982,17 +982,17 @@ tbody tr:hover {
             <option value="SEAF">Sector-16</option>
             <option value="SEBD">Sector-24</option>
             <option value="MAHM">Mahatma Mandir</option>
-        </>
+        </select>
                 </div>
 
                 <div class="filter-group">
                     <label for="platformFilter">Platform</label>
-                    < id="platformFilter">
+                    <select id="platformFilter">
                         <option value="">All Platforms</option>
                         <option value="PL1">PL1</option>
                         <option value="PL2">PL2</option>
                         <option value="PL3">PL3</option>
-                    </>
+                    </select>
                 </div>
 
                 <button onclick="searchByStation()">Find Journeys</button>
@@ -4955,10 +4955,10 @@ let _dropdownCache = ''; // tracks last rendered state
 }
 
 function populateJourneyDropdown() {
-    const  = document.getElementById('journeyInput');
-    if (!) return;
+    const select = document.getElementById('journeyInput');
+    if (!select) return;
 
-    const savedVal = .value;
+    const savedVal = select.value;
     const journeyIds = [...new Set(journeyData.map(d => d.journey))];
     const options = [];
 
