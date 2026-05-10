@@ -929,7 +929,7 @@ tbody tr:hover {
                 <div class="filter-group">
                     <label for="journeyInput">Live Journey</label>
                     <select id="journeyInput">
-    <option value="">-- Select Journey --</option>
+    <option value="">Current → Destination</option>
 </select>
                 </div>
 
@@ -945,7 +945,7 @@ tbody tr:hover {
                 <div class="filter-group">
                     <label for="stationInput">Station Code</label>
         <select id="stationInput">
-            <option value="">--Current → Destination--</option>
+            <option value="">Current Station</option>
             <option value="APMC">APMC</option>
             <option value="JVRJ">Jivraj Park</option>
             <option value="RNMS">Rajivnagar</option>
@@ -1019,7 +1019,7 @@ tbody tr:hover {
                     </thead>
                     <tbody id="tableBody">
                         <tr class="empty-state">
-                            <td colspan="5">
+                            <td colspan="4">
                                 <h3>Search a journey to track live location</h3>
                                 <p>Enter a Journey ID above to see current location and next stops</p>
                             </td>
@@ -5178,7 +5178,7 @@ function updateJourneyStatus(journeyId, result) {
         const timeElapsed        = currentTimeSeconds - currentStationTime;
 
         let progressPercent = Math.max(0, Math.min(100, (timeElapsed / totalTimeToNext) * 100));
-        const timeUntilNext = Math.ceil((nextStationTime - currentTimeSeconds) / 60);
+        const timeUntilNext = Math.ceil(nextStationTime - currentTimeSeconds);
 
         const nextStationName    = getStationName(result.nextStop.station);
         const currentStationName = getStationName(result.currentStop.station);
@@ -5193,7 +5193,7 @@ function updateJourneyStatus(journeyId, result) {
                 <h3>→ Next Stop</h3>
                 <div><strong>${nextStationName}</strong></div>
                 <div style="color:#666;font-size:0.9em;margin-top:5px;">
-                    Departs in ${timeUntilNext} minutes at ${result.nextStop.departure.slice(0, 5)}
+                    Departs in ${timeUntilNext} seconds at ${result.nextStop.departure.slice(0, 5)}
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width:${progressPercent.toFixed(1)}%"></div>
@@ -5318,7 +5318,7 @@ function updateStationTable(stationCode, filtered, currentTime) {
     if (!tbody) return;
 
     if (filtered.length === 0) {
-        tbody.innerHTML = `<tr class="empty-state"><td colspan="5">No journeys available at this station</td></tr>`;
+        tbody.innerHTML = `<tr class="empty-state"><td colspan="4">No journeys available at this station</td></tr>`;
         return;
     }
 
@@ -5344,13 +5344,12 @@ const destName = d.destination ? getStationName(d.destination) : '?';
                     <td style="display:none"><span class="station-badge">${currentStationName}</span></td>
                     <td><span class="platform-badge">${d.platform}</span></td>
                     <td><span class="time">${d.departure.slice(0, 5)}</span></td>
-                    <td><span class="station-badge">${nextStationName}</span></td>
                 </tr>`;
         });
 
     tbody.innerHTML = html || `
         <tr class="empty-state">
-            <td colspan="5"><h3>No current or upcoming journeys</h3><p>All trains have departed from this station</p></td>
+            <td colspan="4"><h3>No current or upcoming journeys</h3><p>All trains have departed from this station</p></td>
         </tr>`;
 }
 
